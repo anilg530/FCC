@@ -3,3 +3,11 @@ node_modules/
 
 #misc
 package-lock.json
+
+## Directory-based project format:
+.idea/
+
+# User-specific stuff:
+# .idea/workspace.xml
+# .idea/tasks.xml
+# .idea/dictionaries
