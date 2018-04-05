@@ -5,7 +5,7 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var firebase = require('firebase');
-
+var session = require('express-session')
 const fileUpload = require('express-fileupload');
 
 
@@ -44,6 +44,12 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(fileUpload());
+app.use(session({
+  secret: 'kciqlciqplsgvnzxcmq,a;',
+  resave: false,
+  saveUninitialized: true,
+  //cookie: { secure: true }
+}))
 
 
 app.use('/', index);
