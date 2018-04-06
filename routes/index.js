@@ -4,11 +4,15 @@ var courses = require('../models/courses.js')
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index');
+  res.render('home');
 });
 
 router.get('/login_page', function(req,res,next){
   res.render('loginPage')
+})
+
+router.get('/register', function(req,res,next){
+    res.render('register')
 })
 
 router.get('/homepage', function(req,res,next){
