@@ -1,11 +1,16 @@
 #dependencies
 node_modules/
 
+
+#config
+FirstClassConnect-service-account.json
+
 #misc
 package-lock.json
 
 ## Directory-based project format:
 .idea/
+
 
 # User-specific stuff:
 # .idea/workspace.xml
