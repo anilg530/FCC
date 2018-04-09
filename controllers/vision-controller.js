@@ -1,5 +1,5 @@
 var exports = module.exports = {};
-
+var courseModel = require('../models/courseModel.js')
 
 const vision = require('@google-cloud/vision');
 
@@ -33,31 +33,23 @@ exports.detect = (image) => {
         console.log('days: ', days)
 
         var courses = []
-        var nameIndex = 4
+        
         var startIndex = 0
         var endIndex = 1
         for (var i = 0; i < numbers.length; i++){
-            var currentCourse = courseModel.makeCourse(names[nameIndex], numbers[i], sections[i], days[i], times[startIndex], times[endIndex])
+            var currentCourse = courseModel.makeCourse(names[i], numbers[i], sections[i], days[i], times[startIndex], times[endIndex])
             courses.push(currentCourse)
-            nameIndex++
             startIndex = startIndex + 2
             endIndex = endIndex + 2
         }
         console.log()
         console.log(courses)
 
-
-    client.textDetection(image).then((results) => {
-        const detections = results[0].textAnnotations;
-
-        console.log('Text:');
-        detections.forEach(text => console.log(text));
     })
 
         .catch((err) => {
             console.log(err);
         });
-
 }
 
 
