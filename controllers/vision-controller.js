@@ -9,7 +9,7 @@ const client = new vision.ImageAnnotatorClient({
 
 exports.detect = (image) => {
     //[A-Z]*\s[0-9]*-0\d
-    var regexName = /[A-Z]{2,4}(?=\s[0-9])/g
+    var regexName = /[A-Z]{2,4}(?= [0-9])/g
     var regexNumber = /[0-9]{2,3}[A-C]*(?=-)/g
     var regexSection = /0(?!0)\d/g
     var regexTimes = /[0-9]{1,2}:\d{2}[A-Z]{2}/g
@@ -17,7 +17,7 @@ exports.detect = (image) => {
 
     client.textDetection(image).then((results) => {
         const detections = results[0].textAnnotations;
-
+        console.log(detections[0])
         // console.log('Text:', detections[0].description);
         
         var names = detections[0].description.match(regexName)
@@ -26,11 +26,11 @@ exports.detect = (image) => {
         var times = detections[0].description.match(regexTimes)
         var days = detections[0].description.match(regexDays)
 
-        // console.log('names: ', names.slice(4,8))
-        // console.log('numbers: ', numbers)
-        // console.log('sections: ', sections)
-        // console.log('times: ', times)
-        // console.log('days: ', days)
+        console.log('names: ', names)
+        console.log('numbers: ', numbers)
+        console.log('sections: ', sections)
+        console.log('times: ', times)
+        console.log('days: ', days)
 
         var courses = []
         var nameIndex = 4
