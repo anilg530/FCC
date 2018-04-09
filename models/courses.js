@@ -24,7 +24,6 @@ module.exports = {
         })
         
         console.log('setting')
-        res.redirect('/course_page')
     },
 
 

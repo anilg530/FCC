@@ -1,5 +1,5 @@
 var exports = module.exports = {};
-var courseModel = require('../models/courseModel.js')
+
 
 const vision = require('@google-cloud/vision');
 
@@ -46,11 +46,18 @@ exports.detect = (image) => {
         console.log()
         console.log(courses)
 
+
+    client.textDetection(image).then((results) => {
+        const detections = results[0].textAnnotations;
+
+        console.log('Text:');
+        detections.forEach(text => console.log(text));
     })
 
         .catch((err) => {
             console.log(err);
         });
+
 }
 
 
