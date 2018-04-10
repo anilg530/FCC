@@ -17,9 +17,9 @@ router.get('/homepage', function(req,res,next){
   if (! ('user' in req.session)){
     res.redirect('/login_page')
   } else {
-    res.render('homepage')
+    res.render('homepage', {user: req.session.user})
   }
-  
+
 })
 
 router.get('/course_page', function(req,res,next){
@@ -30,5 +30,14 @@ router.post('/submit_course', function(req,res,next){
   courses.createCourse(req,res,next)
 })
 
+router.get('/chat', function(req,res,next){
+    console.log(req.session.user);
+  if (! ('user' in req.session) ) {
+      res.redirect('/login_page');
+  } else {
+      res.render('chat', {user: req.session.user});
+  }
+
+})
 
 module.exports = router;

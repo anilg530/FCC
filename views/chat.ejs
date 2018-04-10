@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+
+    <!-- jQuery -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/4.12.1/firebase.js"></script>
+    <script>
+        // Initialize Firebase
+        var config = {
+            apiKey: "AIzaSyCmLCSDCOkj2xBzjtbPT4JUZi2-dA4Jebo",
+            authDomain: "fcc-chat-25393.firebaseapp.com",
+            databaseURL: "https://fcc-chat-25393.firebaseio.com",
+            projectId: "fcc-chat-25393",
+            storageBucket: "fcc-chat-25393.appspot.com",
+            messagingSenderId: "725788913392"
+        };
+        firebase.initializeApp(config);
+
+    </script>
+
+    <!-- Firechat -->
+    <link rel="stylesheet" href="https://cdn.firebase.com/libs/firechat/3.0.1/firechat.min.css"/>
+    <script src="https://cdn.firebase.com/libs/firechat/3.0.1/firechat.min.js"></script>
+
+    <!-- Custom CSS -->
+    <style>
+        #firechat-wrapper {
+            height: 475px;
+            max-width: 325px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            background-color: #fff;
+            margin: 50px auto;
+            text-align: center;
+            -webkit-border-radius: 4px;
+            -moz-border-radius: 4px;
+            border-radius: 4px;
+            -webkit-box-shadow: 0 5px 25px #666;
+            -moz-box-shadow: 0 5px 25px #666;
+            box-shadow: 0 5px 25px #666;
+        }
+
+        #displayName {
+            padding: 0.5em 1em;
+            background-color: #DD4B39;
+            border: none;
+            color: #FFF;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body onload="init()">
+<table>
+    <tr>
+        <td>
+            <button id="displayName"></button>
+            <!--<button id="loginBtn" onClick="loginGoogle()">Login with Google</button>-->
+        </td>
+        <td>
+            <!--<button id="logoutBtn" onclick="logout()">Logout</button>-->
+        </td>
+    </tr>
+</table>
+<div id="firechat-wrapper"></div>
+<script type="text/javascript">
+
+
+    function $(id) {
+        return document.querySelector(id);
+    }
+
+    function init() {
+        session = <%- JSON.stringify(user) %>;
+
+        $('#displayName').textContent = "Logging in chat ...";
+        // $('#displayName').style.display = "none";
+        // $('#logoutBtn').style.display = "none";
+        // $('#loginBtn').style.display = "block";
+
+         if(session.uid != null) {
+            firebase.auth().createUserWithEmailAndPassword(session.email, session.uid).then(function(result) {
+                // user for chat created
+                login(session.email, session.uid);
+            }).catch(function(error) {
+                if(error.code === "auth/email-already-in-use")
+                    login(session.email, session.uid);
+                else
+                    alert(error.code + ": " + error.message);
+            });
+        }
+    }
+
+    function login(email, password) {
+        var name = email.split('@')[0].replace(/[^a-zA-Z0-9]/g, ' '); // fix string, replace all symbols w/ space
+        firebase.auth().signInWithEmailAndPassword(email, password).then(function(result) {
+            // signed in
+            // alert(JSON.stringify(result) )
+            user = {
+                uid: result.uid,
+                displayName: name
+            }
+            // alert("login");
+            initChat(user);
+        }).catch(function(err) {
+            //Handle error here
+            alert(err.code + ": " + err.message);
+        });
+    }
+
+
+    function logout() {
+        firebase.auth().signOut().then(function() {
+            //sign-out successful
+            this.location.reload();
+        }).catch(function(err) {
+            console.log(err);
+        });
+    }
+
+    // function loginGoogle() {
+    //     firebase.auth().signOut();  // sign out current user
+    //
+    //     // Log the user in via Google
+    //     var provider = new firebase.auth.GoogleAuthProvider();
+    //     firebase.auth().signInWithPopup(provider).then(function (result) {
+    //         // User signed in!
+    //         // $('#loginBtn').style.display = "none";
+    //         // $('#logoutBtn').style.display = "block";
+    //
+    //         // var uid = result.user.id;
+    //         console.log(result);
+    //         initChat(result.user);
+    //
+    //     }).catch(function (error) {
+    //         console.log("Error authenticating user:", error);
+    //     });
+    // }
+
+
+    function initChat(user) {
+
+        // Get a reference to the Firebase Realtime Database
+        var chatRef = firebase.database().ref();
+
+        // Create an instance of Firechat
+        var chat = new FirechatUI(chatRef, document.getElementById("firechat-wrapper"));
+
+        // // If the user is logged in, set them as the Firechat user
+        chat.setUser(user.uid, user.displayName);
+
+        $('#displayName').textContent = "Logged in as " + user.displayName;
+        $('#displayName').style.display = "block";
+
+    }
+
+    // Listen for authentication state changes
+    firebase.auth().onAuthStateChanged(function (user) {
+        // Once authenticated, instantiate Firechat with the logged in user
+        if (user) {
+            // // If the user is logged in, set them as the Firechat user
+        } else {
+            // If the user is not logged in,
+        }
+    });
+</script>
+</body>
+</html>

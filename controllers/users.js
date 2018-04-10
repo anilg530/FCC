@@ -28,7 +28,7 @@ module.exports = {
                                 console.log(error)
                                 res.redirect('/')
                             }
-                            
+
                     )
                 }
             )
@@ -52,13 +52,17 @@ module.exports = {
                 console.log(req.session.user)
                 firebase.database().ref('users/').once('value', function (snapshot) {
                     console.log(user.uid)
-                    req.session.user = user.uid
+
+                    // before is session.user = user.id; change for passing user's info to front-end
+                    req.session.user = user;//{uid: user.uid, email: user.email, accessToken: user.accessToken}
+                    // req.session.user = user.uid
+
                     console.log(req.session.user)
                     console.log('going here')
                     res.redirect('/homepage')
                 })
-                
-                
+
+
             }
         )
         .catch(function(error){
