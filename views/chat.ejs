@@ -75,37 +75,40 @@
     }
 
     function init() {
-        session = <%- JSON.stringify(user) %>;
+        user = <%- JSON.stringify(user) %>;
 
         $('#displayName').textContent = "Logging in chat ...";
         // $('#displayName').style.display = "none";
         // $('#logoutBtn').style.display = "none";
         // $('#loginBtn').style.display = "block";
 
-         if(session.uid != null) {
-            firebase.auth().createUserWithEmailAndPassword(session.email, session.uid).then(function(result) {
+         if(user.id != null) {
+             // alert(JSON.stringify(session) );
+            firebase.auth().createUserWithEmailAndPassword(user.email, user.id).then(function() {
                 // user for chat created
-                login(session.email, session.uid);
-            }).catch(function(error) {
-                if(error.code === "auth/email-already-in-use")
-                    login(session.email, session.uid);
+                login(user);
+            }).catch(function(err) {
+                if(err.code === "auth/email-already-in-use")
+                    login(user);
                 else
-                    alert(error.code + ": " + error.message);
+                    alert(err.code + ": " + err.message);
             });
         }
     }
 
-    function login(email, password) {
-        var name = email.split('@')[0].replace(/[^a-zA-Z0-9]/g, ' '); // fix string, replace all symbols w/ space
+    function login(user) {
+       // alert(JSON.stringify(user));
+        var email = user.email;
+        var password = user.id;
+        var displayName = user.firstName + ' ' + user.lastName;     ///not using//  email.split('@')[0].replace(/[^a-zA-Z0-9]/g, ' '); // fix string, replace all symbols w/ space
         firebase.auth().signInWithEmailAndPassword(email, password).then(function(result) {
             // signed in
-            // alert(JSON.stringify(result) )
-            user = {
+            chatUser = {
                 uid: result.uid,
-                displayName: name
+                email: email,
+                displayName: displayName
             }
-            // alert("login");
-            initChat(user);
+            initChat(chatUser);
         }).catch(function(err) {
             //Handle error here
             alert(err.code + ": " + err.message);
@@ -142,7 +145,7 @@
     // }
 
 
-    function initChat(user) {
+    function initChat(chatUser) {
 
         // Get a reference to the Firebase Realtime Database
         var chatRef = firebase.database().ref();
@@ -151,9 +154,9 @@
         var chat = new FirechatUI(chatRef, document.getElementById("firechat-wrapper"));
 
         // // If the user is logged in, set them as the Firechat user
-        chat.setUser(user.uid, user.displayName);
+        chat.setUser(chatUser.uid, chatUser.displayName);
 
-        $('#displayName').textContent = "Logged in as " + user.displayName;
+        $('#displayName').textContent = "Logged in as " + chatUser.displayName;
         $('#displayName').style.display = "block";
 
     }
