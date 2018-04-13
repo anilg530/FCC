@@ -10,12 +10,14 @@ module.exports = {
             .then(
                 user => {
                     newUser = {
+                        email: req.body.email,
                         firstName: req.body.firstName,
-                        lastName: req.body.lastName,
-                        classes: []
+                        lastName: req.body.lastName
+                        
                     }
 
-                    req.session.user = user.uid
+                    req.session.user = newUser
+                    req.session.user['id'] = user.uid
                     console.log(req.session)
                     firebase.database().ref('users/' + user.uid).set(newUser)
                         .then(
@@ -49,12 +51,11 @@ module.exports = {
         firebase.auth().signInWithEmailAndPassword(email, password)
         .then(
             user => {
-                console.log(req.session.user)
-                firebase.database().ref('users/').once('value', function (snapshot) {
+                firebase.database().ref('users/').child(user.uid).once('value', function (snapshot) {
+                    req.session.user = snapshot.val()
                     console.log(user.uid)
-                    req.session.user = user.uid
+                    req.session.user['id'] = user.uid
                     console.log(req.session.user)
-                    console.log('going here')
                     res.redirect('/homepage')
                 })
                 

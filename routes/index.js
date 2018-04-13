@@ -16,8 +16,6 @@ router.get('/register', function(req,res,next){
 })
 
 router.get('/homepage', function(req,res,next){
-  console.log('getting homepage')
-  console.log('user: ' + req.session.user)
   if (! ('user' in req.session)){
     res.redirect('/login_page')
   } else {
