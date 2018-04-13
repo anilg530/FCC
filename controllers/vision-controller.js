@@ -42,8 +42,8 @@ exports.detect = (image,req) => {
             startIndex = startIndex + 2
             endIndex = endIndex + 2
         }
-        console.log(req.session['user'])
-        var test = req.session['user']
+        console.log('user id: ' + req.session['user']['id'])
+        var userId = req.session['user']['id']
         var coursesRef = firebase.database().ref('courses/')
         for (var i = 0; i<courses.length; i++){
             coursesRef.push().set({
@@ -54,9 +54,7 @@ exports.detect = (image,req) => {
                 startTime: courses[i].startTime,
                 endTime: courses[i].endTime,
                 //fix this
-                students: {
-                    test: true
-                }
+                students: [userId]
             })
         }
         
