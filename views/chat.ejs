@@ -8,18 +8,16 @@
 
     <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/4.12.1/firebase.js"></script>
+    <!-- chat functions -->
+    <script src="js/chat.js"></script>
     <script>
-        // Initialize Firebase
-        var config = {
-            apiKey: "AIzaSyCmLCSDCOkj2xBzjtbPT4JUZi2-dA4Jebo",
-            authDomain: "fcc-chat-25393.firebaseapp.com",
-            databaseURL: "https://fcc-chat-25393.firebaseio.com",
-            projectId: "fcc-chat-25393",
-            storageBucket: "fcc-chat-25393.appspot.com",
-            messagingSenderId: "725788913392"
+        var currentUser = <%- JSON.stringify(user) %>  // pass from back-end
+        var course = {  // hardcoded for testing
+            courseName: "CS146",
+            courseNumber: 1,
+            department: "depart1",
+            section: "01"
         };
-        firebase.initializeApp(config);
-
     </script>
 
     <!-- Firechat -->
@@ -27,149 +25,15 @@
     <script src="https://cdn.firebase.com/libs/firechat/3.0.1/firechat.min.js"></script>
 
     <!-- Custom CSS -->
-    <style>
-        #firechat-wrapper {
-            height: 475px;
-            max-width: 325px;
-            padding: 10px;
-            border: 1px solid #ccc;
-            background-color: #fff;
-            margin: 50px auto;
-            text-align: center;
-            -webkit-border-radius: 4px;
-            -moz-border-radius: 4px;
-            border-radius: 4px;
-            -webkit-box-shadow: 0 5px 25px #666;
-            -moz-box-shadow: 0 5px 25px #666;
-            box-shadow: 0 5px 25px #666;
-        }
+    <link rel="stylesheet" type="text/css" href="css/chat.css"/>
 
-        #displayName {
-            padding: 0.5em 1em;
-            background-color: #DD4B39;
-            border: none;
-            color: #FFF;
-            cursor: pointer;
-        }
-    </style>
 </head>
 
 <body onload="init()">
-<table>
-    <tr>
-        <td>
-            <button id="displayName"></button>
-            <!--<button id="loginBtn" onClick="loginGoogle()">Login with Google</button>-->
-        </td>
-        <td>
-            <!--<button id="logoutBtn" onclick="logout()">Logout</button>-->
-        </td>
-    </tr>
-</table>
+<!--display status-->
+<button id="displayName"></button>
+<!--chat wrapper-->
 <div id="firechat-wrapper"></div>
-<script type="text/javascript">
 
-
-    function $(id) {
-        return document.querySelector(id);
-    }
-
-    function init() {
-        user = <%- JSON.stringify(user) %>;
-
-        $('#displayName').textContent = "Logging in chat ...";
-        // $('#displayName').style.display = "none";
-        // $('#logoutBtn').style.display = "none";
-        // $('#loginBtn').style.display = "block";
-
-         if(user.id != null) {
-             // alert(JSON.stringify(session) );
-            firebase.auth().createUserWithEmailAndPassword(user.email, user.id).then(function() {
-                // user for chat created
-                login(user);
-            }).catch(function(err) {
-                if(err.code === "auth/email-already-in-use")
-                    login(user);
-                else
-                    alert(err.code + ": " + err.message);
-            });
-        }
-    }
-
-    function login(user) {
-       // alert(JSON.stringify(user));
-        var email = user.email;
-        var password = user.id;
-        var displayName = user.firstName + ' ' + user.lastName;     ///not using//  email.split('@')[0].replace(/[^a-zA-Z0-9]/g, ' '); // fix string, replace all symbols w/ space
-        firebase.auth().signInWithEmailAndPassword(email, password).then(function(result) {
-            // signed in
-            chatUser = {
-                uid: result.uid,
-                email: email,
-                displayName: displayName
-            }
-            initChat(chatUser);
-        }).catch(function(err) {
-            //Handle error here
-            alert(err.code + ": " + err.message);
-        });
-    }
-
-
-    function logout() {
-        firebase.auth().signOut().then(function() {
-            //sign-out successful
-            this.location.reload();
-        }).catch(function(err) {
-            console.log(err);
-        });
-    }
-
-    // function loginGoogle() {
-    //     firebase.auth().signOut();  // sign out current user
-    //
-    //     // Log the user in via Google
-    //     var provider = new firebase.auth.GoogleAuthProvider();
-    //     firebase.auth().signInWithPopup(provider).then(function (result) {
-    //         // User signed in!
-    //         // $('#loginBtn').style.display = "none";
-    //         // $('#logoutBtn').style.display = "block";
-    //
-    //         // var uid = result.user.id;
-    //         console.log(result);
-    //         initChat(result.user);
-    //
-    //     }).catch(function (error) {
-    //         console.log("Error authenticating user:", error);
-    //     });
-    // }
-
-
-    function initChat(chatUser) {
-
-        // Get a reference to the Firebase Realtime Database
-        var chatRef = firebase.database().ref();
-
-        // Create an instance of Firechat
-        var chat = new FirechatUI(chatRef, document.getElementById("firechat-wrapper"));
-
-        // // If the user is logged in, set them as the Firechat user
-        chat.setUser(chatUser.uid, chatUser.displayName);
-
-        $('#displayName').textContent = "Logged in as " + chatUser.displayName;
-        $('#displayName').style.display = "block";
-
-    }
-
-    // Listen for authentication state changes
-    firebase.auth().onAuthStateChanged(function (user) {
-        // Once authenticated, instantiate Firechat with the logged in user
-        if (user) {
-            // // If the user is logged in, set them as the Firechat user
-        } else {
-            // If the user is not logged in,
-        }
-    });
-</script>
 </body>
 </html>
