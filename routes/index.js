@@ -33,7 +33,10 @@ router.get('/chat', function(req,res,next){
   if (! ('user' in req.session) ) {
       res.redirect('/login_page');
   } else {
-      res.render('chat', {user: req.session.user});
+      res.render('chat', {
+          user: req.session.user,
+          courses: {}
+      });
   }
 
 })
