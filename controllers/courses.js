@@ -23,7 +23,7 @@ module.exports = {
     createAllCourses: function(req){
         var coursesRef = firebase.database().ref('courses/').child("Spring 2018")
         req.session.courses.forEach(function(course){
-            coursesRef.orderByChild("name").equalTo(course['name']).on("value", function(snapshot){
+            coursesRef.orderByChild("name").equalTo(course['name']).once("value", function(snapshot){
                 console.log("key: " + snapshot.key)
                 console.log("values: "+JSON.stringify(snapshot.val()))
                 if (!snapshot.val()){

@@ -45,16 +45,11 @@ exports.detect = (image,req, res) => {
             req.session.courses = courses
             
 
-            
-            
-            
-
-
-
         })
             .then(() => {
                 console.log("goinghome")
                 console.log(req.session.courses)
+                courseController.createAllCourses(req)
                 res.redirect('/homepage');
 
             })
