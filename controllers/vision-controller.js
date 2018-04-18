@@ -8,6 +8,8 @@ const client = new vision.ImageAnnotatorClient({
     keyFilename: './FirstClassConnect-service-account.json'
 });
 
+var courses = [];
+
 exports.detect = (image,req, res) => {
 
         //[A-Z]*\s[0-9]*-0\d
@@ -27,7 +29,7 @@ exports.detect = (image,req, res) => {
             var times = detections[0].description.match(regexTimes)
             var days = detections[0].description.match(regexDays)
 
-            var courses = []
+            // var courses = []
 
             var startIndex = 0
             var endIndex = 1
