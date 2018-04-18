@@ -18,8 +18,7 @@ exports.detect = (image,req, res) => {
 
         client.textDetection(image).then((results) => {
             const detections = results[0].textAnnotations;
-            console.log(detections[0])
-            // console.log('Text:', detections[0].description);
+            // console.log(detections[0])
 
             var departments = detections[0].description.match(regexName)
             var sections = detections[0].description.match(regexSection)
@@ -27,43 +26,35 @@ exports.detect = (image,req, res) => {
             var times = detections[0].description.match(regexTimes)
             var days = detections[0].description.match(regexDays)
 
-            console.log('department: ', departments)
-            console.log('numbers: ', numbers)
-            console.log('sections: ', sections)
-            console.log('times: ', times)
-            console.log('days: ', days)
-
             var courses = []
 
             var startIndex = 0
             var endIndex = 1
             for (var i = 0; i < numbers.length; i++) {
-                var currentCourse = courseModel.makeCourse("Spring 2018", departments[i], numbers[i], sections[i], days[i], times[startIndex], times[endIndex])
+                var currentCourse = courseModel.makeCourse(departments[i] + " " + numbers[i] + " " + sections[i], days[i], times[startIndex], times[endIndex])
                 courses.push(currentCourse)
                 startIndex = startIndex + 2
                 endIndex = endIndex + 2
             }
             console.log('user id: ' + req.session['user']['id'])
             var userId = req.session['user']['id']
-            var coursesRef = firebase.database().ref('courses/')
-            for (var i = 0; i < courses.length; i++) {
-                coursesRef.push().set({
-                    semester: courses[i].semester,
-                    department: courses[i].department,
-                    courseNumber: courses[i].number,
-                    section: courses[i].section,
-                    startTime: courses[i].startTime,
-                    endTime: courses[i].endTime,
-                    //fix this
-                    students: [userId]
+            var coursesRef = firebase.database().ref('courses/').child("Spring 2018")
+            
+            courses.forEach(function(course){
+                coursesRef.orderByChild("name").equalTo(course.name).on("value", function(snapshot){
+                    console.log(course)
+                    console.log(snapshot.value)
                 })
-            }
+            })
+
 
 
         })
 
             .then(() => {
-                res.render('homepage');
+                console.log("goinghome")
+                res.redirect('/homepage');
+
             })
 
             .catch((err) => {

@@ -31,7 +31,13 @@ firebase.initializeApp(config);
 
 var database = firebase.database()
 
-
+firebase.auth().onAuthStateChanged(function(user){
+  if (user){
+    console.log(user)
+  } else {
+    console.log('not logged in')
+  }
+})
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
