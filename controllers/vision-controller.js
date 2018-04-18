@@ -7,6 +7,8 @@ const client = new vision.ImageAnnotatorClient({
     keyFilename: './FirstClassConnect-service-account.json'
 });
 
+var courses = [];
+
 exports.detect = (image,req, res) => {
 
         //[A-Z]*\s[0-9]*-0\d
@@ -26,7 +28,7 @@ exports.detect = (image,req, res) => {
             var times = detections[0].description.match(regexTimes)
             var days = detections[0].description.match(regexDays)
 
-            var courses = []
+            // var courses = []
 
             var startIndex = 0
             var endIndex = 1
@@ -38,29 +40,47 @@ exports.detect = (image,req, res) => {
             }
             console.log('user id: ' + req.session['user']['id'])
             var userId = req.session['user']['id']
-            var coursesRef = firebase.database().ref('courses/').child("Spring 2018")
-            
-            courses.forEach(function(course){
-                coursesRef.orderByChild("name").equalTo(course.name).on("value", function(snapshot){
-                    console.log(course)
-                    console.log(snapshot.value)
-                })
-            })
+            // var coursesRef = firebase.database().ref('courses/').child("Spring 2018")
+            //
+            // courses.forEach(function(course){
+            //     coursesRef.orderByChild("name").equalTo(course.name).on("value", function(snapshot){
+            //         console.log(course)
+            //         console.log(snapshot.value)
+            //     })
+            // })
 
 
 
         })
-
             .then(() => {
-                console.log("goinghome")
-                res.redirect('/homepage');
-
+                creatCourses();
             })
 
             .catch((err) => {
                 console.log(err);
             });
 
+
+        async function creatCourses() {
+            var coursesRef = firebase.database().ref('courses/').child("Spring 2018")
+
+            var promise = new Promise((resovle, reject) => {
+            courses.forEach(function(course){
+                coursesRef.orderByChild("name").equalTo(course.name).on("value", function(snapshot){
+                    console.log(course)
+                    console.log(snapshot.value)
+                })
+            })
+              setTimeout(() => resovle(), 6000);
+            })
+
+
+            await promise
+
+            console.log("goinghome")
+            res.redirect('/homepage');
+
+        }
 }
 
 
