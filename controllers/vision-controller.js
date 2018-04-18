@@ -1,5 +1,6 @@
 var exports = module.exports = {};
 var courseModel = require('../models/courseModel.js')
+var courseController = require('./courses.js')
 var firebase = require('firebase')
 const vision = require('@google-cloud/vision');
 
@@ -30,29 +31,30 @@ exports.detect = (image,req, res) => {
 
             var startIndex = 0
             var endIndex = 1
+            
             for (var i = 0; i < numbers.length; i++) {
                 var currentCourse = courseModel.makeCourse(departments[i] + " " + numbers[i] + " " + sections[i], days[i], times[startIndex], times[endIndex])
                 courses.push(currentCourse)
                 startIndex = startIndex + 2
                 endIndex = endIndex + 2
             }
+            
             console.log('user id: ' + req.session['user']['id'])
             var userId = req.session['user']['id']
             var coursesRef = firebase.database().ref('courses/').child("Spring 2018")
+            req.session.courses = courses
             
-            courses.forEach(function(course){
-                coursesRef.orderByChild("name").equalTo(course.name).on("value", function(snapshot){
-                    console.log(course)
-                    console.log(snapshot.value)
-                })
-            })
+
+            
+            
+            
 
 
 
         })
-
             .then(() => {
                 console.log("goinghome")
+                console.log(req.session.courses)
                 res.redirect('/homepage');
 
             })

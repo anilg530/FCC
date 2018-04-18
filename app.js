@@ -33,7 +33,7 @@ var database = firebase.database()
 
 firebase.auth().onAuthStateChanged(function(user){
   if (user){
-    console.log(user)
+    console.log("user logged in")
   } else {
     console.log('not logged in')
   }
