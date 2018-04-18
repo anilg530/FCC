@@ -47,16 +47,30 @@ exports.detect = (image,req, res) => {
 
         })
             .then(() => {
-                console.log("goinghome")
-                console.log(req.session.courses)
-                courseController.createAllCourses(req)
-                res.redirect('/homepage');
+            createCourses(req);
 
             })
 
             .catch((err) => {
                 console.log(err);
             });
+
+
+    async function createCourses() {
+        var coursesRef = firebase.database().ref('courses/').child("Spring 2018")
+
+        var promise = new Promise((resovle, reject) => {
+            courseController.createAllCourses(req)
+            setTimeout(() => resovle(), 6000);
+        })
+
+
+        await promise
+
+        console.log("goinghome")
+        res.redirect('/homepage');
+
+    }
 
 }
 
