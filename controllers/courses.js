@@ -32,7 +32,7 @@ module.exports = {
                     days: course.days,
                     startTime: course.startTime,
                     endTime: course.endTime,
-                    students: []
+                    students: [req.session.user['id']]
                     })
                     .catch(function(error){
                         var errorCode = error.computed
