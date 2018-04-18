@@ -12,7 +12,7 @@ router.post('/save', (req, res) => {
 
 
     let sampleFile = req.files.sampleFile;
-    vision.detect(sampleFile.data, req);
+    vision.detect(sampleFile.data, req, res);
 
 });
 
