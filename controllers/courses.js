@@ -25,7 +25,6 @@ module.exports = {
         req.session.courses.forEach(function(course){
             coursesRef.orderByChild("name").equalTo(course['name']).once("value", function(snapshot){
                 console.log("key: " + snapshot.key)
-                console.log("values: "+JSON.stringify(snapshot.val()))
                 if (!snapshot.val()){
                     coursesRef.push().set({
                     name: course.name,
@@ -41,7 +40,31 @@ module.exports = {
                             console.log(errorMessage)
                     })
                 } else {
+                    var course
+                    snapshot.forEach(function(data){
+                        var item = {
+                            key: data.key,
+                            students: data.val().students,
+                        }
+                        item['students'].push(req.session.user['id'])
+                        course = item
+                    })  
+                    
+                    console.log("values: "+JSON.stringify(snapshot.key))
                     console.log("course exists")
+                    var studentCourseRef = firebase.database().ref('courses/').child("Spring 2018").child(course['key']).child("students")
+                    studentCourseRef
+                    .transaction(function(students){
+                        students = course['students']
+                        return students
+                    })
+                    
+                    // .on("value", function(snapshot){
+                    //     console.log("course key" + course['key'])
+                    //     console.log("the snap: " + JSON.stringify(snapshot.val()))
+                        
+                        
+                    // })
                 }
                 
             })

@@ -8,7 +8,7 @@ const client = new vision.ImageAnnotatorClient({
     keyFilename: './FirstClassConnect-service-account.json'
 });
 
-var courses = [];
+
 
 exports.detect = (image,req, res) => {
 
@@ -29,7 +29,7 @@ exports.detect = (image,req, res) => {
             var times = detections[0].description.match(regexTimes)
             var days = detections[0].description.match(regexDays)
 
-            // var courses = []
+            var courses = []
 
             var startIndex = 0
             var endIndex = 1
@@ -63,7 +63,7 @@ exports.detect = (image,req, res) => {
 
         var promise = new Promise((resovle, reject) => {
             courseController.createAllCourses(req)
-            setTimeout(() => resovle(), 6000);
+            setTimeout(() => resovle(), 1000);
         })
 
 
@@ -79,3 +79,14 @@ exports.detect = (image,req, res) => {
 
 
 
+// {"-LAQ5hcywSwy4AHHG0bU":{
+//     "days":"We",
+//     "endTime":"8:45PM",
+//     "name":"SE 195B 01",
+//     "startTime":"6:00PM",
+//     "students":[
+//         "lZUXECkltQObiViADDKT4APSYJ63",
+//            "asdfasdflkjasdf"
+//         ]
+//     }   
+// }
