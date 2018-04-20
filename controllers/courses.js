@@ -5,7 +5,6 @@ module.exports = {
         var coursesRef = firebase.database().ref('courses/').child("Spring 2018")
         
         // console.log('reference: ', coursesRef)
-
         coursesRef.push().set({
             name: course.name,
             days: course.days,
@@ -22,17 +21,19 @@ module.exports = {
     },
     createAllCourses: function(req){
         var coursesRef = firebase.database().ref('courses/').child("Spring 2018")
+        var userRef = firebase.database().ref('users/').child(req.session.user['id'])
         req.session.courses.forEach(function(course){
             coursesRef.orderByChild("name").equalTo(course['name']).once("value", function(snapshot){
-                console.log("key: " + snapshot.key)
-                console.log("values: "+JSON.stringify(snapshot.val()))
+                // console.log("key: " + snapshot.key)
+                // console.log("values: "+JSON.stringify(snapshot.val()))
+                var courseId;
                 if (!snapshot.val()){
-                    coursesRef.push().set({
-                    name: course.name,
-                    days: course.days,
-                    startTime: course.startTime,
-                    endTime: course.endTime,
-                    students: [req.session.user['id']]
+                    var pushedCourseRef = coursesRef.push().set({
+                        name: course.name,
+                        days: course.days,
+                        startTime: course.startTime,
+                        endTime: course.endTime,
+                        students: [req.session.user['id']]
                     })
                     .catch(function(error){
                         var errorCode = error.computed
@@ -40,9 +41,14 @@ module.exports = {
                             console.log(errorCode)
                             console.log(errorMessage)
                     })
+
+                    //GET THE COURSE ID!!!!
+                    console.log("course Id: "+JSON.stringify(pushedCourseRef))
+                    
                 } else {
                     
                     console.log("course exists")
+                    //get course id
                     var newCourse
                     snapshot.forEach(function(data){
                         var item = {
@@ -53,21 +59,40 @@ module.exports = {
                         newCourse = item
                     })  
                     
-                    console.log("values: "+JSON.stringify(snapshot.key))
-                    console.log("course exists")
-                    
+                    //store the user id in the course
+                    courseId = newCourse['key']
+                    console.log("COURSE ID: " + courseId)
                     var studentCourseRef = firebase.database().ref('courses/').child("Spring 2018").child(newCourse['key']).child("students")
                     studentCourseRef
                     .transaction(function(students){
                         students = newCourse['students']
                         return students
                     })
+
+                    //WORK ON THIS!!!!
+                    var userRef = firebase.database().ref('users/').child(req.session.user['id'])
+                    userRef.once("value", function(snapshot){
+                        if (snapshot.hasChild("courses")){
+                            console.log("has courses")
+                            userRef.child("courses").transaction(function(courses){
+                                
+                                console.log("check if array: "+Array.isArray(courses))
+                                return courses
+                            })
+                        } else {
+                            userRef.transaction(function(user){
+                                if (user){
+                                    user.courses = [courseId]
+                                }
+                                return user
+                            })
+                            console.log("doesn't have courses")
+                        }
+                    })
                 }
-                
             })
-            
         })
-    }
+    },
 
 
 }

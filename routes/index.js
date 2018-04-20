@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var courses = require('../controllers/courses.js')
+var users = require('../controllers/users.js')
 
 /* GET home page. */
 router.get('/', function(req, res, next) {

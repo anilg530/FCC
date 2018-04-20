@@ -16,13 +16,11 @@ module.exports = {
                         photo: null
                         
                     }
-
                     req.session.user = newUser
-                    req.session.user['id'] = user.uid
-                    console.log(req.session)
                     firebase.database().ref('users/' + user.uid).set(newUser)
                         .then(
                         data => {
+                            req.session.user['id'] = user.uid
                             console.log('user created')
                             res.redirect('/homepage')
                         })
@@ -84,5 +82,10 @@ module.exports = {
             console.log(errorCode)
             console.log(errorMessage)
         })
+    },
+    deleteUsers: function(){
+        
+        var userRef = firebase.database().ref('users/')
+        userRef.remove()
     }
 }
