@@ -69,7 +69,8 @@
 }
 .navbar-doublerow.navbar-trans2.afterscroll {
     top:-50px;
-    background-color: slategray;
+    background-color: black;
+
 }
 
 .flex-container {
