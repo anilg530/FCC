@@ -1,46 +1,78 @@
 var express = require('express');
 var router = express.Router();
 var courses = require('../controllers/courses.js')
+var users = require('../controllers/users.js')
 
 var profileController = require('../controllers/profile-controller');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index');
+
+    res.render('home');
+
 });
 
 router.get('/login_page', function(req,res,next){
-  res.render('loginPage')
+
+    res.render('loginPage')
+
+})
+
+router.get('/register', function(req,res,next){
+    res.render('signup')
 })
 
 router.get('/homepage', function(req,res,next){
-  if (! ('user' in req.session)){
-    res.redirect('/login_page')
-  } else {
-    res.render('homepage')
-  }
+    if (! ('user' in req.session)){
+        res.redirect('/login_page')
+    } else {
+        res.render('homepage')
+    }
 
 })
 
 router.get('/course_page', function(req,res,next){
-  res.render('course_page')
+    res.render('course_page')
 })
 
+
+
 router.post('/submit_course', function(req,res,next){
-  courses.createCourse(req,res,next)
+    courses.createCourse(req,res,next)
+})
+
+router.get('/profile', function(req,res,next){
+    res.render("profile",{ user: req.session.user })
+})
+router.get('/edit_profile', function(req,res,next){
+    res.render("edit_profile",{ user: req.session.user })
 })
 
 
 router.get('/userPhotoForm', (req,res) => {
-  res.render('uploadUserImage');
+    res.render('uploadUserImage');
 })
 
 router.post('/userPhoto', (req, res) => {
-  profileController.uploadProfileImage(req, res);
+    profileController.uploadProfileImage(req, res);
 })
 
 router.get('/getCourses', (req, res) => {
-  profileController.getCourses(req, res);
+    profileController.getCourses(req, res);
+})
+
+
+router.get('/chat', function(req,res,next){
+    console.log(req.session.user);
+    if (! ('user' in req.session) ) {
+        res.redirect('/login_page');
+    } else {
+        res.render('chat', {
+            user: req.session.user,
+            courses: {}
+        });
+    }
+
 })
 
 module.exports = router;
