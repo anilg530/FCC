@@ -23,12 +23,16 @@ module.exports = {
         var coursesRef = firebase.database().ref('courses/').child("Spring 2018")
         var userRef = firebase.database().ref('users/').child(req.session.user['id'])
         req.session.courses.forEach(function(course){
+            
+            
             coursesRef.orderByChild("name").equalTo(course['name']).once("value", function(snapshot){
                 // console.log("key: " + snapshot.key)
                 // console.log("values: "+JSON.stringify(snapshot.val()))
                 var courseId;
                 if (!snapshot.val()){
-                    var pushedCourseRef = coursesRef.push().set({
+                    var pushedCourseRef = coursesRef.push()
+                    courseId = pushedCourseRef.key
+                    pushedCourseRef.set({
                         name: course.name,
                         days: course.days,
                         startTime: course.startTime,
@@ -43,7 +47,7 @@ module.exports = {
                     })
 
                     //GET THE COURSE ID!!!!
-                    console.log("course Id: "+JSON.stringify(pushedCourseRef))
+                    console.log("course Id: "+JSON.stringify(pushedCourseRef.key))
                     
                 } else {
                     
@@ -70,29 +74,77 @@ module.exports = {
                     })
 
                     //WORK ON THIS!!!!
-                    var userRef = firebase.database().ref('users/').child(req.session.user['id'])
+                    
+                }
+                var userRef = firebase.database().ref('users/').child(req.session.user['id'])
                     userRef.once("value", function(snapshot){
                         if (snapshot.hasChild("courses")){
                             console.log("has courses")
                             userRef.child("courses").transaction(function(courses){
                                 
                                 console.log("check if array: "+Array.isArray(courses))
+                                if (courses){
+                                    courses.push(courseId)
+                                }
                                 return courses
                             })
                         } else {
                             userRef.transaction(function(user){
                                 if (user){
-                                    user.courses = [courseId]
+                                    if (!user.courses){
+                                        user.courses = [courseId]
+                                    } else {
+                                        user.courses.push(courseId)
+                                    }
+                                    
                                 }
                                 return user
                             })
                             console.log("doesn't have courses")
                         }
                     })
-                }
             })
         })
     },
-
+   async getAllCourses(req,res,next){
+        var promise = new Promise((resolve, reject)=>{
+            var userRef = firebase.database().ref('users').child(req.session.user['id'])
+            var coursesIds=[]
+            var coursesNames=[]
+            req.session.courseNames = []
+            userRef.once("value", function(snapshot){
+                coursesIds = snapshot.val().courses
+                
+            }).then(value =>{
+                
+                console.log("course ids: ", coursesIds)
+                coursesIds.forEach(function(id){
+                    var courseRef = firebase.database().ref('courses/').child("Spring 2018").child(id)
+                    !function outer(coursesNames){
+                        
+                        courseRef.once("value", function(courseSnapshot){
+                            coursesNames.push(courseSnapshot.val().name)
+                            if (coursesIds.length == coursesNames.length){
+                                console.log("course names: " +coursesNames)
+                                resolve(coursesNames);
+                               // return promise;  
+                               // return coursesNames
+                            }
+                        })
+                    }(coursesNames)
+                    
+                    
+                    
+                    
+                // console.log("course names: " +req.session.courseNames)  
+                })
+                
+            })
+        })
+        
+        // resolve(courseNames);
+        return promise;        
+       // res.redirect('/homepage')
+    }
 
 }
