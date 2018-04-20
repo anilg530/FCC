@@ -106,6 +106,45 @@ module.exports = {
             })
         })
     },
-
+   async getAllCourses(req,res,next){
+        var promise = new Promise((resolve, reject)=>{
+            var userRef = firebase.database().ref('users').child(req.session.user['id'])
+            var coursesIds=[]
+            var coursesNames=[]
+            req.session.courseNames = []
+            userRef.once("value", function(snapshot){
+                coursesIds = snapshot.val().courses
+                
+            }).then(value =>{
+                
+                console.log("course ids: ", coursesIds)
+                coursesIds.forEach(function(id){
+                    var courseRef = firebase.database().ref('courses/').child("Spring 2018").child(id)
+                    !function outer(coursesNames){
+                        
+                        courseRef.once("value", function(courseSnapshot){
+                            coursesNames.push(courseSnapshot.val().name)
+                            if (coursesIds.length == coursesNames.length){
+                                console.log("course names: " +coursesNames)
+                                resolve(coursesNames);
+                               // return promise;  
+                               // return coursesNames
+                            }
+                        })
+                    }(coursesNames)
+                    
+                    
+                    
+                    
+                // console.log("course names: " +req.session.courseNames)  
+                })
+                
+            })
+        })
+        
+        // resolve(courseNames);
+        return promise;        
+       // res.redirect('/homepage')
+    }
 
 }
