@@ -62,15 +62,21 @@ router.get('/getCourses', (req, res) => {
 })
 
 
-router.get('/chat', function(req,res,next){
+router.get('/chats', function(req,res,next){
     console.log(req.session.user);
     if (! ('user' in req.session) ) {
         res.redirect('/login_page');
     } else {
-        res.render('chat', {
-            user: req.session.user,
-            courses: {}
-        });
+        courses.getAllCourses(req,res,next).then(
+            courseNames =>{
+                console.log(courseNames)
+                res.render('chat', {
+                    user: req.session.user,
+                    courses: courseNames
+                });
+            }
+        )
+
     }
 
 })

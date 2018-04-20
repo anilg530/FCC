@@ -12,12 +12,7 @@
     <script src="js/chat.js"></script>
     <script>
         var currentUser = <%- JSON.stringify(user) %>  // pass from back-end
-        var course = {  // hardcoded for testing
-            courseName: "CS146",
-            courseNumber: 1,
-            department: "depart1",
-            section: "01"
-        };
+        var courses = <%- JSON.stringify(courses) %>
     </script>
 
     <!-- Firechat -->

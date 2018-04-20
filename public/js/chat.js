@@ -72,25 +72,30 @@ function initChatUI(chatUser) {
     // // If the user is logged in, set them as the Firechat user
     chatUI.setUser(chatUser.uid, chatUser.displayName);
 
-    var courseTitle = course.courseName + '-' + course.section;
-
+    //var courseTitle = courses;
+alert(courses);
     var chat = new Firechat(chatRef);
     chat.setUser(chatUser.uid, chatUser.displayName);
     chat.getRoomList(function(roomList) {
         // console.log(roomList);
         var rooms = [];
         for( var id in roomList) {
-            if(roomList[id].name === courseTitle) {
-                rooms.push(roomList[id]);
-                chat.enterRoom(id);
+            for (var i=0; i < courses.length; i++) {
+                // alert(course);
+                if(roomList[id].name === courses[i]) {
+                    rooms.push(roomList[id]);
+                    chat.enterRoom(id);
+                }
             }
         }
-        if( rooms.length == 0 )
-            chat.createRoom(courseTitle, "public", function(roomId) {
-                chat.enterRoom(roomId);
-            });
-        // console.log(rooms);
-
+        if( rooms.length == 0 ) {
+            for(var i=0; i < courses.length; i++) {
+                // alert(course);
+                chat.createRoom(courses[i], "public", function(roomId) {
+                    chat.enterRoom(roomId);
+                });
+            }
+        }
     });
 
     // chat.createRoom(courseName, "public", function(roomId){
