@@ -73,7 +73,7 @@ function initChatUI(chatUser) {
     chatUI.setUser(chatUser.uid, chatUser.displayName);
 
     //var courseTitle = courses;
-alert(courses);
+// alert(courses);
     var chat = new Firechat(chatRef);
     chat.setUser(chatUser.uid, chatUser.displayName);
     chat.getRoomList(function(roomList) {
