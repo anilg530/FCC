@@ -1,11 +1,15 @@
-var firebase = require('firebase')
+var firebase = require('firebase');
+var visionController  = require('../controllers/vision-controller');
 
 
 module.exports = {
-    createUser: function(req,res,next){
+    createUser: function(req,res,next) {
         var email = req.body.email
         var password = req.body.password
         console.log('creating user')
+        console.log(email);
+        console.log(password);
+        console.log(req.body.firstName);
         firebase.auth().createUserWithEmailAndPassword(email, password)
             .then(
                 user => {
@@ -13,7 +17,7 @@ module.exports = {
                         email: req.body.email,
                         firstName: req.body.firstName,
                         lastName: req.body.lastName
-                        
+
                     }
 
                     req.session.user = newUser
@@ -21,28 +25,34 @@ module.exports = {
                     console.log(req.session)
                     firebase.database().ref('users/' + user.uid).set(newUser)
                         .then(
-                        data => {
-                            console.log('user created')
-                            res.redirect('/homepage')
-                        })
+                            data => {
+                                console.log('user created')
+                                if (!req.files)
+                                    return res.status(400).send("No files were uploaded");
+
+                                let sampleFile = req.files.sampleFile;
+                                visionController.detect(sampleFile.data, req);
+                                this.logInUser(req,res)
+                            })
+
+
                         .catch(
                             error => {
                                 console.log(error)
                                 res.redirect('/')
                             }
-                            
-                    )
+                        )
                 }
             )
-            .catch(function (error){
-                var errorCode = error.computed
-                var errorMessage = error.message;
-                console.log(errorCode)
-                console.log(errorMessage)
-            }
-        )
-
+            .catch(function (error) {
+                    var errorCode = error.computed
+                    var errorMessage = error.message;
+                    console.log(errorCode)
+                    console.log(errorMessage)
+                }
+            )
     },
+
 
     logInUser: function(req,res,next){
         var email = req.body.email
@@ -56,7 +66,7 @@ module.exports = {
                     console.log(user.uid)
                     req.session.user['id'] = user.uid
                     console.log(req.session.user)
-                    res.redirect('/homepage')
+                    res.redirect('/profile')
                 })
                 
                 
@@ -68,6 +78,7 @@ module.exports = {
             var errorMessage = error.message;
             console.log(errorCode)
             console.log(errorMessage)
+
         })
     },
 
