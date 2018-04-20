@@ -18,6 +18,8 @@ router.post('/login_user', function(req,res,next){
 
 router.get('/sign_out', function(req,res,next){
   users.signOutUser(req,res,next)
-}) 
+})
+
+
 
 module.exports = router;
