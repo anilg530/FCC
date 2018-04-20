@@ -1,6 +1,9 @@
 var express = require('express');
 var router = express.Router();
 var courses = require('../controllers/courses.js')
+var users = require('../controllers/users.js')
+
+var profileController = require('../controllers/profile-controller');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -45,5 +48,17 @@ router.get('/edit_profile', function(req,res,next){
     res.render("edit_profile",{ user: req.session.user })
 })
 
+
+router.get('/userPhotoForm', (req,res) => {
+  res.render('uploadUserImage');
+})
+
+router.post('/userPhoto', (req, res) => {
+  profileController.uploadProfileImage(req, res);
+})
+
+router.get('/getCourses', (req, res) => {
+  profileController.getCourses(req, res);
+})
 
 module.exports = router;

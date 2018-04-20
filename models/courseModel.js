@@ -1,10 +1,7 @@
 module.exports = {
-    makeCourse: function(semester, department, number, section, days, startTime, endTime){
+    makeCourse: function(name, days, startTime, endTime){
         var course = {
-            semester: semester,
-            department: department,
-            number: number,
-            section: section,
+            name,
             days: days, 
             startTime: startTime,
             endTime: endTime
