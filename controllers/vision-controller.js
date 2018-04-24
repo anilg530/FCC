@@ -40,6 +40,7 @@ exports.detect = (image,req, res) => {
                 startIndex = startIndex + 2
                 endIndex = endIndex + 2
             }
+            console.log(courses)
             
             console.log('user id: ' + req.session['user']['id'])
             var userId = req.session['user']['id']

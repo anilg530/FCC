@@ -111,21 +111,26 @@ module.exports = {
             var userRef = firebase.database().ref('users').child(req.session.user['id'])
             var coursesIds=[]
             var coursesNames=[]
-            req.session.courseNames = []
+            req.session.courses = []
             userRef.once("value", function(snapshot){
                 coursesIds = snapshot.val().courses
                 
             }).then(value =>{
                 
-                console.log("course ids: ", coursesIds)
+                // console.log("course ids: ", coursesIds)
                 coursesIds.forEach(function(id){
                     var courseRef = firebase.database().ref('courses/').child("Spring 2018").child(id)
                     !function outer(coursesNames){
                         
                         courseRef.once("value", function(courseSnapshot){
                             coursesNames.push(courseSnapshot.val().name)
+                            courseInput = courseSnapshot.val()
+                            courseInput['id'] = courseSnapshot.key
+                            
+                            req.session.courses.push(courseInput)
                             if (coursesIds.length == coursesNames.length){
-                                console.log("course names: " +coursesNames)
+                                // console.log("course names: " +coursesNames)
+                                console.log("session courses: "+JSON.stringify(req.session.courses[0]['id']))
                                 resolve(coursesNames);
                                // return promise;  
                                // return coursesNames
@@ -145,6 +150,26 @@ module.exports = {
         // resolve(courseNames);
         return promise;        
        // res.redirect('/homepage')
+    },
+
+    //test this later
+    getMutualCourses(req,res,next, visitedId){
+        var visitedRef = firebase.database().ref('users').child(visitedId)
+        var courseIds = []
+        visitedRef.once("value", function(snapshot){
+            courseIds = snapshot.val().courses
+        }).then(value =>{
+            console.log("course ids: ", coursesIds)
+            var visitorCourses = []
+            for (var i = 0; i < courseIds.length; i++){
+                for (var j = 0; j< req.session.courses.length; j++){
+                    if (courseIds[i] == req.session.courses[j]['id']){
+                        visitorCourses.push(req.session.courses[j])
+                    }
+                }
+            }
+            return visitedCourses
+        })
     }
 
 }

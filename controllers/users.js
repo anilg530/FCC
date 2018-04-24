@@ -94,5 +94,15 @@ module.exports = {
             console.log(errorCode)
             console.log(errorMessage)
         })
+    },
+    getProfile(profileId){
+        var userRef = firebase.database('users').child(profileId)
+        var profileData
+        userRef.once("value", function(snapshot){
+            console.log(snapshot.val())
+            profileData = snapshot.val()
+            return profileData
+        })
+        
     }
 }

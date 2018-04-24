@@ -21,8 +21,6 @@ router.get('/sign_out', function(req,res,next){
   users.signOutUser(req,res,next)
 })
 
-
-
 router.get('/get_courses', function(req,res,next){
  courses.getAllCourses(req,res,next)
  .then((courses)=>{
@@ -30,5 +28,6 @@ router.get('/get_courses', function(req,res,next){
    res.redirect('/homepage')
  })
 })
+
 
 module.exports = router;
