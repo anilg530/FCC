@@ -132,10 +132,6 @@ module.exports = {
                             }
                         })
                     }(coursesNames)
-                    
-                    
-                    
-                    
                 // console.log("course names: " +req.session.courseNames)  
                 })
                 
