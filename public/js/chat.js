@@ -108,6 +108,7 @@ function initChatUI(chatUser) {
 }
 
 
+
 // Listen for authentication state changes
 // firebase.auth().onAuthStateChanged(function (user) {
 //     // Once authenticated, instantiate Firechat with the logged in user
@@ -117,7 +118,6 @@ function initChatUI(chatUser) {
 //         // If the user is not logged in,
 //     }
 // });
-
 // function logout() {
 //     firebase.auth().signOut().then(function() {
 //         //sign-out successful
