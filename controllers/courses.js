@@ -110,7 +110,7 @@ module.exports = {
         var promise = new Promise((resolve, reject)=>{
             var userRef = firebase.database().ref('users').child(req.session.user['id'])
             var coursesIds=[]
-            var coursesNames=[]
+            var courseData=[]
             req.session.courseNames = []
             userRef.once("value", function(snapshot){
                 coursesIds = snapshot.val().courses
@@ -120,18 +120,18 @@ module.exports = {
                 console.log("course ids: ", coursesIds)
                 coursesIds.forEach(function(id){
                     var courseRef = firebase.database().ref('courses/').child("Spring 2018").child(id)
-                    !function outer(coursesNames){
+                    !function outer(courseData){
                         
                         courseRef.once("value", function(courseSnapshot){
-                            coursesNames.push(courseSnapshot.val().name)
-                            if (coursesIds.length == coursesNames.length){
-                                console.log("course names: " +coursesNames)
-                                resolve(coursesNames);
+                            courseData.push(courseSnapshot.val())
+                            if (coursesIds.length == courseData.length){
+                                console.log("course data: " +JSON.stringify(courseData))
+                                resolve(courseData);
                                // return promise;  
-                               // return coursesNames
+                               // return courseData
                             }
                         })
-                    }(coursesNames)
+                    }(courseData)
                     
                     
                     

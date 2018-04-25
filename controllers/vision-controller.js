@@ -70,7 +70,6 @@ exports.detect = (image,req, res) => {
         await promise
 
         console.log("goinghome")
-        res.redirect('/homepage');
 
     }
 

@@ -41,11 +41,13 @@ router.post('/submit_course', function(req,res,next){
     courses.createCourse(req,res,next)
 })
 
-router.get('/profile', function(req,res,next){
+router.get('/profile/:id', function(req,res,next){
+    console.log(req.param("id"))
+    
     res.render("profile",{ user: req.session.user })
 })
-router.get('/edit_profile', function(req,res,next){
-    res.render("edit_profile",{ user: req.session.user })
+router.get('/my_profile', function(req,res,next){
+    res.render("my_profile",{ user: req.session.user })
 })
 
 
@@ -68,11 +70,11 @@ router.get('/chats', function(req,res,next){
         res.redirect('/login_page');
     } else {
         courses.getAllCourses(req,res,next).then(
-            courseNames =>{
-                console.log(courseNames)
+            courseData =>{
+                console.log(courseData)
                 res.render('chat', {
                     user: req.session.user,
-                    courses: courseNames
+                    courses: courseData
                 });
             }
         )

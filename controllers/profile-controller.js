@@ -1,6 +1,21 @@
 var exports = module.exports = {}
 var firebase = require('firebase')
 
+
+module.exports = {
+    getProfileInfo: function(profileId) {
+        var profileRef = firebase.database().ref('users/').child("Spring 2018").child(profileId)
+        var profileInfo;
+        profileRef.once("value", function(snapshot){
+            console.log(snapshot)
+            profileInfo = snapshot
+        })
+
+    }
+}
+
+
+
 exports.editStudentEmail= (req, res) => {
     //var user = req.session.user;
 }

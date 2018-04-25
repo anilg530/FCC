@@ -66,7 +66,7 @@ module.exports = {
                     console.log(user.uid)
                     req.session.user['id'] = user.uid
                     console.log(req.session.user)
-                    res.redirect('/profile')
+                    res.redirect('/my_profile')
                 })
                 
                 
