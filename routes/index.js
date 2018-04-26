@@ -68,11 +68,11 @@ router.get('/chats', function(req,res,next){
         res.redirect('/login_page');
     } else {
         courses.getAllCourses(req,res,next).then(
-            courseNames =>{
-                console.log(courseNames)
+            courseData =>{
+                console.log(courseData)
                 res.render('chat', {
                     user: req.session.user,
-                    courses: courseNames
+                    courses: courseData
                 });
             }
         )

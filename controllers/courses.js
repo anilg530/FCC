@@ -3,7 +3,7 @@ var firebase = require('firebase')
 module.exports = {
     createCourse: function(course) {
         var coursesRef = firebase.database().ref('courses/').child("Spring 2018")
-        
+
         // console.log('reference: ', coursesRef)
         coursesRef.push().set({
             name: course.name,
@@ -23,8 +23,8 @@ module.exports = {
         var coursesRef = firebase.database().ref('courses/').child("Spring 2018")
         var userRef = firebase.database().ref('users/').child(req.session.user['id'])
         req.session.courses.forEach(function(course){
-            
-            
+
+
             coursesRef.orderByChild("name").equalTo(course['name']).once("value", function(snapshot){
                 // console.log("key: " + snapshot.key)
                 // console.log("values: "+JSON.stringify(snapshot.val()))
@@ -48,9 +48,9 @@ module.exports = {
 
                     //GET THE COURSE ID!!!!
                     console.log("course Id: "+JSON.stringify(pushedCourseRef.key))
-                    
+
                 } else {
-                    
+
                     console.log("course exists")
                     //get course id
                     var newCourse
@@ -61,8 +61,8 @@ module.exports = {
                         }
                         item['students'].push(req.session.user['id'])
                         newCourse = item
-                    })  
-                    
+                    })
+
                     //store the user id in the course
                     courseId = newCourse['key']
                     console.log("COURSE ID: " + courseId)
@@ -74,14 +74,14 @@ module.exports = {
                     })
 
                     //WORK ON THIS!!!!
-                    
+
                 }
                 var userRef = firebase.database().ref('users/').child(req.session.user['id'])
                     userRef.once("value", function(snapshot){
                         if (snapshot.hasChild("courses")){
                             console.log("has courses")
                             userRef.child("courses").transaction(function(courses){
-                                
+
                                 console.log("check if array: "+Array.isArray(courses))
                                 if (courses){
                                     courses.push(courseId)
@@ -96,7 +96,7 @@ module.exports = {
                                     } else {
                                         user.courses.push(courseId)
                                     }
-                                    
+
                                 }
                                 return user
                             })
@@ -110,40 +110,40 @@ module.exports = {
         var promise = new Promise((resolve, reject)=>{
             var userRef = firebase.database().ref('users').child(req.session.user['id'])
             var coursesIds=[]
-            var coursesNames=[]
+            var courseData=[]
             req.session.courseNames = []
             userRef.once("value", function(snapshot){
                 coursesIds = snapshot.val().courses
-                
+
             }).then(value =>{
-                
+
                 console.log("course ids: ", coursesIds)
                 coursesIds.forEach(function(id){
                     var courseRef = firebase.database().ref('courses/').child("Spring 2018").child(id)
-                    !function outer(coursesNames){
-                        
+                    !function outer(courseData){
+
                         courseRef.once("value", function(courseSnapshot){
-                            coursesNames.push(courseSnapshot.val().name)
-                            if (coursesIds.length == coursesNames.length){
-                                console.log("course names: " +coursesNames)
-                                resolve(coursesNames);
-                               // return promise;  
+                            courseData.push(courseSnapshot.val())
+                            if (coursesIds.length == courseData.length){
+                                console.log("course names: " +courseData)
+                                resolve(courseData);
+                               // return promise;
                                // return coursesNames
                             }
                         })
-                    }(coursesNames)
-                    
-                    
-                    
-                    
-                // console.log("course names: " +req.session.courseNames)  
+                    }(courseData)
+
+
+
+
+                // console.log("course names: " +req.session.courseNames)
                 })
-                
+
             })
         })
-        
+
         // resolve(courseNames);
-        return promise;        
+        return promise;
        // res.redirect('/homepage')
     }
 
