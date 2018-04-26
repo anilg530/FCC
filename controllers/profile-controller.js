@@ -32,10 +32,17 @@ module.exports = {
         var user = req.session.user;
         var userRef = firebase.app().database().ref('users').child(user['id']);
 
+        
+        req.session.user['bio'] = req.body['bio'] //saves the bio in the user session
+        
         userRef.once("value", (snapshot) => {
             userRef.update({
-                biography: req.session.bio
-            })
+                biography: req.body['bio']
+            }).then(
+                value => {
+                    res.redirect('/my_profile')
+                }
+            )
         });
     }
 

@@ -138,7 +138,8 @@ router.get('/my_profile', function(req,res,next){
 })
 
 router.post('/submit_bio', function(req, res,next){
-    
+    //make the name of the bio field "bio" in the post body
+    profileController.addBio(req,res,next)
 })
 
 
