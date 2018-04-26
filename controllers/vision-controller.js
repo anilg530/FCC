@@ -53,7 +53,6 @@ exports.detect = (image,req, res) => {
                 daysCount++
                 
                 courses.push(currentCourse)
-                
             }
             //console.log("outputted courses: ",courses)
             console.log('user id: ' + req.session['user']['id'])
@@ -61,9 +60,9 @@ exports.detect = (image,req, res) => {
             var coursesRef = firebase.database().ref('courses/').child("Spring 2018")
             req.session.courses = courses
             //console.log(req.session.courses)
-
+            resolve(courses);
         })
-       setTimeout(() => resolve(), 1000);
+
     })
     console.log('1');
     return promise;
