@@ -1,6 +1,6 @@
 var firebase = require('firebase');
 var visionController  = require('../controllers/vision-controller');
-
+var coursesController = require('../controllers/courses.js')
 
 module.exports = {
     createUser: function(req,res,next) {
@@ -36,7 +36,7 @@ module.exports = {
                             })
 
 
-                        .catch(
+                        .catch( 
                             error => {
                                 console.log(error)
                                 res.redirect('/')
@@ -66,7 +66,11 @@ module.exports = {
                     console.log(user.uid)
                     req.session.user['id'] = user.uid
                     console.log(req.session.user)
-                    res.redirect('/my_profile')
+                    coursesController.getAllCourses(req,res,next).then(value => {
+                        console.log("getting courses successful")
+                        res.redirect('/my_profile')
+                    })
+                    
                 })
                 
                 
