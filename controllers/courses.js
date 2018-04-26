@@ -108,7 +108,7 @@ module.exports = {
                     })
                 })
             })
-            resolve();
+            setTimeout(()=>resolve(), 1000);
         })
 
         return promise
@@ -119,10 +119,10 @@ module.exports = {
             var coursesIds=[]
             var courseData=[]
             req.session.courses = []
-
+            console.log("user id in session: "+req.session.user['id'])
             userRef.once("value", function(snapshot){
                 coursesIds = snapshot.val().courses
-
+                console.log("snapshot check: ",JSON.stringify(snapshot.val()))
             }).then(value =>{
                 
                 console.log("course ids: ", coursesIds)

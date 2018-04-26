@@ -57,7 +57,10 @@ router.post('/save_schedule', function(req,res,next){
     console.log(inputCourses)
     req.session.courses = inputCourses
     courses.createAllCourses(req).then(() =>{
-        res.redirect("/my_profile")
+        courses.getAllCourses(req,res,next).then(value =>{
+            res.redirect("/my_profile")
+        })
+        
     })
 
 })
