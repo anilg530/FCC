@@ -14,7 +14,7 @@ router.post('/new_user', function(req,res,next){
 
 
 router.post('/login_user', function(req,res,next){
-  users.logInUser(req,res,next)
+  users.logInUser(req,res,next, false)
 })
 
 router.get('/sign_out', function(req,res,next){

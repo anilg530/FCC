@@ -12,6 +12,7 @@ const client = new vision.ImageAnnotatorClient({
 
 exports.detect = (image,req, res) => {
 
+    var promise = new Promise((resolve, reject) => {
         //[A-Z]*\s[0-9]*-0\d
         var regexName = /[A-Z]{2,4}(?= [0-9])/g
         var regexNumber = /[0-9]{2,3}[A-C]*(?=-)/g
@@ -33,48 +34,46 @@ exports.detect = (image,req, res) => {
 
             var startIndex = 0
             var endIndex = 1
-            
+
             for (var i = 0; i < numbers.length; i++) {
                 var currentCourse = courseModel.makeCourse(departments[i] + " " + numbers[i] + " " + sections[i], days[i], times[startIndex], times[endIndex])
                 courses.push(currentCourse)
                 startIndex = startIndex + 2
                 endIndex = endIndex + 2
             }
-            
+
             console.log('user id: ' + req.session['user']['id'])
             var userId = req.session['user']['id']
             var coursesRef = firebase.database().ref('courses/').child("Spring 2018")
             req.session.courses = courses
-            
+            //console.log(req.session.courses)
 
         })
-            .then(() => {
-            createCourses(req);
-
-            })
-
-            .catch((err) => {
-                console.log(err);
-            });
+       setTimeout(() => resolve(), 1000);
+    })
+    console.log('1');
+    return promise;
 
 
-    async function createCourses() {
+}
+
+    async function goToConfirmation() {
         var coursesRef = firebase.database().ref('courses/').child("Spring 2018")
 
-        var promise = new Promise((resovle, reject) => {
-            courseController.createAllCourses(req)
-            setTimeout(() => resovle(), 1000);
+        var promise = new Promise((resolve, reject) => {
+            // courseController.createAllCourses(req)
+            // setTimeout(() => resovle(), 1000);
         })
 
 
         await promise
 
         console.log("goinghome")
-        res.redirect('/homepage');
+
 
     }
 
-}
+
 
 
 
