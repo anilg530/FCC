@@ -57,14 +57,17 @@ function loginChat(user) {
     var email = user.email;
     var password = user.id;
     var displayName = user.firstName + ' ' + user.lastName;     ///not using//  email.split('@')[0].replace(/[^a-zA-Z0-9]/g, ' '); // fix string, replace all symbols w/ space
-    firebase.auth().signInWithEmailAndPassword(email, password).then(function(result) {
+    firebase.auth().signInWithEmailAndPassword(email, password).then(function(u) {
         // signed in
         chatUser = {
-            uid: result.uid,
+            uid: u.uid,
             email: email,
             displayName: displayName,
             link: user.id
         }
+
+        firebase.database().ref('profile-link/' + u.uid).set(chatUser);
+
         initChatUI(chatUser);
     }).catch(function(err) {
         //Handle error here
@@ -74,10 +77,6 @@ function loginChat(user) {
 
 
 function initChatUI(chatUser) {
-
-    $('#displayName').textContent = "Hi, " + chatUser.displayName;
-    $('#displayName').style.display = "block";
-    $('#displayName').style.backgroundColor = "#007e37"
 
     // Get a reference to the Firebase Realtime Database
     var chatRef = firebase.database().ref();
@@ -89,16 +88,11 @@ function initChatUI(chatUser) {
     chatUI.setUser(chatUser.uid, chatUser.displayName);
 
     enterChat(chatUser);
+
 }
 
 
 function enterChat(chatUser) {
-    //alert(profile[chatUser.uid].link);
-    //var courseTitle = courses;
-// alert(courses);
-//     for(var id in courses[0].students) {
-//         alert(id + ": " + courses[0].students[id]);
-//     }
 
     // Get a reference to the Firebase Realtime Database
     var chatRef = firebase.database().ref();
@@ -123,14 +117,18 @@ function enterChat(chatUser) {
             for(var i = 0; i < rooms.length; i++) {
                 if( valid.test(courses[rooms[i]].name) ) {
                    // alert(courses[rooms[i]].name + " create");
-                    chat.createRoom(courses[rooms[i]].name, "public", function (roomId) {
-                        chat.enterRoom(roomId);
-                    });
+                    chat.createRoom(courses[rooms[i]].name, "public"); //, function (roomId) {
+                        // chat.enterRoom(roomId);
+                    // });
                 }
             }
+            this.location.href=this.location.href;
         }
     });
 
+    $('#displayName').textContent = "Hi, " + chatUser.displayName;
+    $('#displayName').style.display = "block";
+    $('#displayName').style.backgroundColor = "#007e37";
 
 }
 
