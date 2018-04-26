@@ -32,7 +32,7 @@ module.exports = {
 
                                 let sampleFile = req.files.sampleFile;
                                 visionController.detect(sampleFile.data, req);
-                                this.logInUser(req,res)
+                                res.redirect('/my_profile')
                             })
 
 
@@ -70,6 +70,7 @@ module.exports = {
                         console.log("getting courses successful")
                         res.redirect('/my_profile')
                     })
+                    
                     
                 })
                 

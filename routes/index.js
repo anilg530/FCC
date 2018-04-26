@@ -47,6 +47,7 @@ router.get('/profile/:id', function(req,res,next){
     
 })
 router.get('/my_profile', function(req,res,next){
+    console.log("courses session: " + req.session.courses)
     res.render("my_profile",{ user: req.session.user })
 })
 
