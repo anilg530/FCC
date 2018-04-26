@@ -12,7 +12,11 @@ router.post('/save', (req, res) => {
 
 
     let sampleFile = req.files.sampleFile;
-    vision.detect(sampleFile.data, req);
+    vision.detect(sampleFile.data, req).then(()=>{
+        console.log('2');
+        res.redirect('confirm_schedule');
+    });
+
 
 });
 

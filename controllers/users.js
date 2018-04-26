@@ -13,7 +13,7 @@ module.exports = {
         firebase.auth().createUserWithEmailAndPassword(email, password)
             .then(
                 user => {
-                    newUser = {
+                      newUser = {
                         email: req.body.email,
                         firstName: req.body.firstName,
                         lastName: req.body.lastName
@@ -27,21 +27,15 @@ module.exports = {
                         .then(
                             data => {
                                 console.log('user created')
-                                if (!req.files)
-                                    return res.status(400).send("No files were uploaded");
+                                //     return res.status(400).send("No files were uploaded");
+                                //
+                                // let sampleFile = req.files.sampleFile;
+                                // visionController.detect(sampleFile.data, req);
+                                // this.logInUser(req,res)
 
-                                let sampleFile = req.files.sampleFile;
-                                visionController.detect(sampleFile.data, req).then(
-                                    value =>{
-                                        // coursesController.getAllCourses(req,res,next).then(
-                                        //     hope =>{
-                                        //         res.redirect('/my_profile')
-                                        //     }
-                                        // )
-                                    }
-                                )
-                                
-                                
+
+                                res.redirect('/upload_Schedule')
+
                             })
 
 

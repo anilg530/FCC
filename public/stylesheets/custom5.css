@@ -1,0 +1,30 @@
+/*custom font*/
+@import url(https://fonts.googleapis.com/css?family=Montserrat);
+
+/*basic reset*/
+
+
+html {
+    height: 100%;
+
+
+
+
+}
+
+
+.box {
+    padding-top: 10%;
+    margin-top: 20%;
+    border: 1px solid ;
+    border-radius: 4px;
+    transition: 0.2s;
+    width: 50%;
+}
+body{
+    background: #87aac7;
+    background-image: url("https://preview.ibb.co/it0LMn/ZenBG_1.png"), url("https://image.ibb.co/bYUanS/ZenBG_2.png");
+    background-repeat: repeat-y, repeat;
+}
+
+

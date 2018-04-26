@@ -20,78 +20,80 @@ module.exports = {
         })
     },
     createAllCourses: function(req){
-        var coursesRef = firebase.database().ref('courses/').child("Spring 2018")
-        var userRef = firebase.database().ref('users/').child(req.session.user['id'])
-        req.session.courses.forEach(function(course){
+
+        var promise = new Promise((resolve, reject) => {
+            var coursesRef = firebase.database().ref('courses/').child("Spring 2018")
+            var userRef = firebase.database().ref('users/').child(req.session.user['id'])
+            req.session.courses.forEach(function (course) {
 
 
-            coursesRef.orderByChild("name").equalTo(course['name']).once("value", function(snapshot){
-                // console.log("key: " + snapshot.key)
-                // console.log("values: "+JSON.stringify(snapshot.val()))
-                var courseId;
-                if (!snapshot.val()){
-                    var pushedCourseRef = coursesRef.push()
-                    courseId = pushedCourseRef.key
-                    pushedCourseRef.set({
-                        name: course.name,
-                        days: course.days,
-                        startTime: course.startTime,
-                        endTime: course.endTime,
-                        students: [req.session.user['id']]
-                    })
-                    .catch(function(error){
-                        var errorCode = error.computed
-                            var errorMessage = error.message;
-                            console.log(errorCode)
-                            console.log(errorMessage)
-                    })
+                coursesRef.orderByChild("name").equalTo(course['name']).once("value", function (snapshot) {
+                    // console.log("key: " + snapshot.key)
+                    // console.log("values: "+JSON.stringify(snapshot.val()))
+                    var courseId;
+                    if (!snapshot.val()) {
+                        var pushedCourseRef = coursesRef.push()
+                        courseId = pushedCourseRef.key
+                        pushedCourseRef.set({
+                            name: course.name,
+                            days: course.days,
+                            startTime: course.startTime,
+                            endTime: course.endTime,
+                            students: [req.session.user['id']]
+                        })
+                            .catch(function (error) {
+                                var errorCode = error.computed
+                                var errorMessage = error.message;
+                                console.log(errorCode)
+                                console.log(errorMessage)
+                            })
 
-                    //GET THE COURSE ID!!!!
-                    console.log("course Id: "+JSON.stringify(pushedCourseRef.key))
+                        //GET THE COURSE ID!!!!
+                        console.log("course Id: " + JSON.stringify(pushedCourseRef.key))
 
-                } else {
+                    } else {
 
-                    console.log("course exists")
-                    //get course id
-                    var newCourse
-                    snapshot.forEach(function(data){
-                        var item = {
-                            key: data.key,
-                            students: data.val().students,
-                        }
-                        item['students'].push(req.session.user['id'])
-                        newCourse = item
-                    })
+                        console.log("course exists")
+                        //get course id
+                        var newCourse
+                        snapshot.forEach(function (data) {
+                            var item = {
+                                key: data.key,
+                                students: data.val().students,
+                            }
+                            item['students'].push(req.session.user['id'])
+                            newCourse = item
+                        })
 
-                    //store the user id in the course
-                    courseId = newCourse['key']
-                    console.log("COURSE ID: " + courseId)
-                    var studentCourseRef = firebase.database().ref('courses/').child("Spring 2018").child(newCourse['key']).child("students")
-                    studentCourseRef
-                    .transaction(function(students){
-                        students = newCourse['students']
-                        return students
-                    })
+                        //store the user id in the course
+                        courseId = newCourse['key']
+                        console.log("COURSE ID: " + courseId)
+                        var studentCourseRef = firebase.database().ref('courses/').child("Spring 2018").child(newCourse['key']).child("students")
+                        studentCourseRef
+                            .transaction(function (students) {
+                                students = newCourse['students']
+                                return students
+                            })
 
-                    //WORK ON THIS!!!!
+                        //WORK ON THIS!!!!
 
-                }
-                var userRef = firebase.database().ref('users/').child(req.session.user['id'])
-                    userRef.once("value", function(snapshot){
-                        if (snapshot.hasChild("courses")){
+                    }
+                    var userRef = firebase.database().ref('users/').child(req.session.user['id'])
+                    userRef.once("value", function (snapshot) {
+                        if (snapshot.hasChild("courses")) {
                             console.log("has courses")
-                            userRef.child("courses").transaction(function(courses){
+                            userRef.child("courses").transaction(function (courses) {
 
-                                console.log("check if array: "+Array.isArray(courses))
-                                if (courses){
+                                console.log("check if array: " + Array.isArray(courses))
+                                if (courses) {
                                     courses.push(courseId)
                                 }
                                 return courses
                             })
                         } else {
-                            userRef.transaction(function(user){
-                                if (user){
-                                    if (!user.courses){
+                            userRef.transaction(function (user) {
+                                if (user) {
+                                    if (!user.courses) {
                                         user.courses = [courseId]
                                     } else {
                                         user.courses.push(courseId)
@@ -101,10 +103,15 @@ module.exports = {
                                 return user
                             })
                             console.log("doesn't have courses")
+
                         }
                     })
+                })
             })
+            resolve();
         })
+
+        return promise
     },
    async getAllCourses(req,res,next){
         var promise = new Promise((resolve, reject)=>{
