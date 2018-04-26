@@ -241,7 +241,7 @@
     <div class="span3 well ">
         <center>
             <a data-toggle="modal" data-target="#myModal"><img src="https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcRbezqZpEuwGSvitKy3wrwnth5kysKdRqBW54cAszm_wiutku3R" name="aboutme" width="140" height="140" class="img-circle"></a>
-            <h3><%= user.firstName%>  <%= user.lastName %></h3>
+            <h3><%= profile.firstName%>  <%= profile.lastName %></h3>
         </center>
 
 
@@ -259,8 +259,13 @@
     <div class="span well">
         <center>
 
-            <h3>Current Courses</h3>
-
+            <h3>Mutual Courses</h3>
+            <!-- <%= profileCourses %> -->
+            
+            <% for (var i = 0; i < profileCourses.length; i++) { %>
+                <button type="button" class = "btn btn-default"><a><%= profileCourses[i]['name'] %></a></button>
+                
+            <% } %>
         </center>
     </div>
     <div class="span well">

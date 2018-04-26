@@ -111,7 +111,7 @@ module.exports = {
             var userRef = firebase.database().ref('users').child(req.session.user['id'])
             var coursesIds=[]
             var courseData=[]
-            req.session.courseNames = []
+            req.session.courses = []
             userRef.once("value", function(snapshot){
                 coursesIds = snapshot.val().courses
                 
@@ -124,8 +124,13 @@ module.exports = {
                         
                         courseRef.once("value", function(courseSnapshot){
                             courseData.push(courseSnapshot.val())
+                            var inputCourse = courseSnapshot.val()
+                            inputCourse['id'] = id
+                            req.session.courses.push(inputCourse)
                             if (coursesIds.length == courseData.length){
                                 console.log("course data: " +JSON.stringify(courseData))
+                                
+                                
                                 resolve(courseData);
                                // return promise;  
                                // return courseData

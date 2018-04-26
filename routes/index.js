@@ -43,8 +43,8 @@ router.post('/submit_course', function(req,res,next){
 
 router.get('/profile/:id', function(req,res,next){
     console.log(req.param("id"))
+    profileController.getProfileInfo(req,res, req.param("id"))
     
-    res.render("profile",{ user: req.session.user })
 })
 router.get('/my_profile', function(req,res,next){
     res.render("my_profile",{ user: req.session.user })

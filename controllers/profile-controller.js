@@ -3,13 +3,30 @@ var firebase = require('firebase')
 
 
 module.exports = {
-    getProfileInfo: function(profileId) {
-        var profileRef = firebase.database().ref('users/').child("Spring 2018").child(profileId)
+    getProfileInfo: function(req,res,profileId) {
+        var profileRef = firebase.database().ref('users/').child(profileId)
         var profileInfo;
+        var profileCourses = []
         profileRef.once("value", function(snapshot){
-            console.log(snapshot)
-            profileInfo = snapshot
-        })
+            profileInfo = snapshot.val()
+            console.log(JSON.stringify(profileInfo.courses))
+            //CHECK THIS!
+            console.log("session courses",req.session.courses)
+            
+            for (var i = 0; i < profileInfo.courses.length; i++){
+                for (var j = 0; j < req.session.courses.length;j++){
+                    if (profileInfo.courses[i] == req.session.courses[j]['id']){
+                        console.log(req.session.courses[j]['name'])
+                        profileCourses.push(req.session.courses[j])
+                    }
+                }
+            }
+        }).then(
+            profile => {
+
+                res.render("profile",{ profile: profileInfo, profileCourses: profileCourses })
+            }
+        )
 
     }
 }
