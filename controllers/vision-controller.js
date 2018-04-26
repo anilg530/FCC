@@ -59,6 +59,7 @@ exports.detect = (image,req, res) => {
             console.log('user id: ' + req.session['user']['id'])
             var userId = req.session['user']['id']
             var coursesRef = firebase.database().ref('courses/').child("Spring 2018")
+            
             req.session.courses = courses
             //console.log(req.session.courses)
 

@@ -27,8 +27,19 @@ module.exports = {
                 res.render("profile",{ profile: profileInfo, profileCourses: profileCourses })
             }
         )
+    },
+    addBio: function(req,res){
+        var user = req.session.user;
+        var userRef = firebase.app().database().ref('users').child(user['id']);
 
+        userRef.once("value", (snapshot) => {
+            userRef.update({
+                biography: req.session.bio
+            })
+        });
     }
+
+
 }
 
 

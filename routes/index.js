@@ -19,6 +19,7 @@ router.get('/login_page', function(req,res,next){
 })
 
 
+//schedule routes
 router.get('/upload_Schedule', function(req,res,next){
     res.render('upload_Schedule')
 })
@@ -67,12 +68,14 @@ router.post('/save_schedule', function(req,res,next){
 
 router.get('/confirm_schedule', function(req,res,next){
     console.log('is it working?')
+    console.log("courses being saved in session: "+req.session.courses)
     var myCourses = req.session.courses
     for (var i = 0; i < myCourses.length;i++){
         var nameEdit = myCourses[i]['name'].split(" ")
         myCourses[i].name = nameEdit[0]
         myCourses[i].number = nameEdit[1]
         myCourses[i].section = nameEdit[2]
+        console.log("going in the for")
     }
     console.log(JSON.stringify(req.session.courses))
 
@@ -98,6 +101,7 @@ router.post('/submit_schedule', function(req,res,next){
 })
 
 
+//register routes
 router.get('/register', function(req,res,next){
     res.render('signup')
 })
@@ -121,6 +125,8 @@ router.post('/submit_course', function(req,res,next){
     courses.createCourse(req,res,next)
 })
 
+
+//profile routes
 router.get('/profile/:id', function(req,res,next){
     console.log(req.param("id"))
     profileController.getProfileInfo(req,res, req.param("id"))
@@ -129,6 +135,10 @@ router.get('/profile/:id', function(req,res,next){
 router.get('/my_profile', function(req,res,next){
     console.log("courses session: " + req.session.courses)
     res.render("my_profile",{ user: req.session.user })
+})
+
+router.post('/submit_bio', function(req, res,next){
+    
 })
 
 
