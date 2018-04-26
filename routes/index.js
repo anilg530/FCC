@@ -57,13 +57,13 @@ router.post('/save_schedule', function(req,res,next){
     console.log(inputCourses)
     req.session.courses = inputCourses
     courses.createAllCourses(req).then(() =>{
-        res.redirect("profile")
+        res.redirect("/my_profile")
     })
 
 })
 
 router.get('/confirm_schedule', function(req,res,next){
-
+    console.log('is it working?')
     var myCourses = req.session.courses
     for (var i = 0; i < myCourses.length;i++){
         var nameEdit = myCourses[i]['name'].split(" ")

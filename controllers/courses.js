@@ -124,16 +124,18 @@ module.exports = {
                 coursesIds = snapshot.val().courses
 
             }).then(value =>{
-
+                
                 console.log("course ids: ", coursesIds)
                 coursesIds.forEach(function(id){
                     var courseRef = firebase.database().ref('courses/').child("Spring 2018").child(id)
+                    console.log("the id: " + id)
                     !function outer(courseData){
-
+                        console.log(id)
                         
                         courseRef.once("value", function(courseSnapshot){
                             courseData.push(courseSnapshot.val())
                             var inputCourse = courseSnapshot.val()
+                            console.log(inputCourse)
                             inputCourse['id'] = id
                             req.session.courses.push(inputCourse)
                             if (coursesIds.length == courseData.length){
