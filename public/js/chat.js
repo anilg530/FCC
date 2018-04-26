@@ -34,6 +34,8 @@ function init() {
         firebase.auth().createUserWithEmailAndPassword(email, password).then(function(user) {
             // user for chat created
                 profilelink = {
+                    email: currentUser.email,
+                    name: currentUser.firstName + ' ' + currentUser.lastName,
                     link: currentUser.id
                 };
                 // alert(postlink.link);
