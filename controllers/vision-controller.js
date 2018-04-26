@@ -11,7 +11,7 @@ const client = new vision.ImageAnnotatorClient({
 
 
 exports.detect = (image,req, res) => {
-
+var promise = new Promise((resolve, reject)=>{
         //[A-Z]*\s[0-9]*-0\d
         var regexName = /[A-Z]{2,4}(?= [0-9])/g
         var regexNumber = /[0-9]{2,3}[A-C]*(?=-)/g
@@ -49,8 +49,9 @@ exports.detect = (image,req, res) => {
 
         })
             .then(() => {
-            createCourses(req);
-
+                createCourses(req).then(value => {
+                courseController.getAllCourses(req, res,next)
+                })
             })
 
             .catch((err) => {
@@ -71,9 +72,12 @@ exports.detect = (image,req, res) => {
         
         console.log("goinghome")
         
+        return promise
 
     }
-
+    setTimeout(() => resolve(), 1000);
+})
+return promise;
 }
 
 

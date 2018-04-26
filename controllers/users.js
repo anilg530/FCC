@@ -31,8 +31,17 @@ module.exports = {
                                     return res.status(400).send("No files were uploaded");
 
                                 let sampleFile = req.files.sampleFile;
-                                visionController.detect(sampleFile.data, req);
-                                res.redirect('/my_profile')
+                                visionController.detect(sampleFile.data, req).then(
+                                    value =>{
+                                        // coursesController.getAllCourses(req,res,next).then(
+                                        //     hope =>{
+                                        //         res.redirect('/my_profile')
+                                        //     }
+                                        // )
+                                    }
+                                )
+                                
+                                
                             })
 
 
