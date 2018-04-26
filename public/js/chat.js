@@ -9,6 +9,15 @@ var config = {
 };
 firebase.initializeApp(config);
 
+function updateProfileLink(b) {
+    profileURL = b;
+    // alert("in a funtion" + b);
+}
+
+firebase.database().ref('profile-link/').on('value', function(snapshot) {
+    updateProfileLink(snapshot.val());
+});
+
 function $(id) {
     return document.querySelector(id);
 }
@@ -22,8 +31,14 @@ function init() {
 
         var email = currentUser.email;
         var password = currentUser.id;
-        firebase.auth().createUserWithEmailAndPassword(email, password).then(function() {
+        firebase.auth().createUserWithEmailAndPassword(email, password).then(function(user) {
             // user for chat created
+                profilelink = {
+                    link: currentUser.id
+                };
+                // alert(postlink.link);
+            firebase.database().ref('profile-link/' + user.uid).set(profilelink);
+
             loginChat(currentUser);
 
         }).catch(function(err) {
@@ -45,7 +60,8 @@ function loginChat(user) {
         chatUser = {
             uid: result.uid,
             email: email,
-            displayName: displayName
+            displayName: displayName,
+            link: user.id
         }
         initChatUI(chatUser);
     }).catch(function(err) {
@@ -75,6 +91,7 @@ function initChatUI(chatUser) {
 
 
 function enterChat(chatUser) {
+    //alert(profile[chatUser.uid].link);
     //var courseTitle = courses;
 // alert(courses);
 //     for(var id in courses[0].students) {
@@ -103,7 +120,7 @@ function enterChat(chatUser) {
         if( rooms.length > 0 ) {
             for(var i = 0; i < rooms.length; i++) {
                 if( valid.test(courses[rooms[i]].name) ) {
-                    alert(courses[rooms[i]].name + " create");
+                   // alert(courses[rooms[i]].name + " create");
                     chat.createRoom(courses[rooms[i]].name, "public", function (roomId) {
                         chat.enterRoom(roomId);
                     });
