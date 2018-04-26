@@ -8,16 +8,26 @@
 
     <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/4.12.1/firebase.js"></script>
+
+    <!-- Firechat -->
+    <!--<link rel="stylesheet" href="https://cdn.firebase.com/libs/firechat/3.0.1/firechat.min.css" />-->
+    <!--<script src="https://cdn.firebase.com/libs/firechat/3.0.1/firechat.min.js"></script>-->
+    <link rel="stylesheet" href="css/firechat.css"/>
+    <script src="js/firechat.min.js"></script>
+
     <!-- chat functions -->
     <script src="js/chat.js"></script>
     <script>
         var currentUser = <%- JSON.stringify(user) %>  // pass from back-end
         var courses = <%- JSON.stringify(courses) %>
+        var url = {
+            'z yang': "/profile/zyang",
+            'Marcus Norona': "/profile/marcusnorona",
+            'aa bb': "/profile/aabb",
+            'Zishun Yang': "/profile/zishunyang"
+        };
     </script>
 
-    <!-- Firechat -->
-    <link rel="stylesheet" href="css/firechat.css"/>
-    <script src="js/firechat.min.js"></script>
 
     <!-- Custom CSS -->
     <link rel="stylesheet" type="text/css" href="css/chat.css"/>
@@ -26,7 +36,7 @@
 
 <body onload="init()">
 <!--display status-->
-<button id="displayName"></button>
+<button id="displayName" onclick="location.href='/profile'">Loading ... </button>
 <!--chat wrapper-->
 <div id="firechat-wrapper"></div>
 

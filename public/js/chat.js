@@ -15,23 +15,22 @@ function $(id) {
 
 function init() {
     //var currentUser = <%= JSON.stringify(user) %>;
-    $('#displayName').textContent = "Loading chat ...";
-    // $('#displayName').style.display = "none";
-    // $('#logoutBtn').style.display = "none";
-    // $('#loginBtn').style.display = "block";
+    $('#displayName').textContent = "Entering ...";
+    $('#displayName').style.backgroundColor = "#ab9800"
 
     if(currentUser.id != null) {
-        // alert(JSON.stringify(session) );
+
         var email = currentUser.email;
         var password = currentUser.id;
         firebase.auth().createUserWithEmailAndPassword(email, password).then(function() {
             // user for chat created
             loginChat(currentUser);
+
         }).catch(function(err) {
             if(err.code === "auth/email-already-in-use")
                 loginChat(currentUser);
             else
-                alert(err.code + ": " + err.message);
+                alert("firechat problem, " + err.code + ": " + err.message);
         });
     }
 }
@@ -56,7 +55,6 @@ function loginChat(user) {
 }
 
 
-
 function initChatUI(chatUser) {
 
     $('#displayName').textContent = "Hi, " + chatUser.displayName;
@@ -72,41 +70,61 @@ function initChatUI(chatUser) {
     // // If the user is logged in, set them as the Firechat user
     chatUI.setUser(chatUser.uid, chatUser.displayName);
 
+    enterChat(chatUser);
+}
+
+
+function enterChat(chatUser) {
     //var courseTitle = courses;
 // alert(courses);
+//     for(var id in courses[0].students) {
+//         alert(id + ": " + courses[0].students[id]);
+//     }
+
+    // Get a reference to the Firebase Realtime Database
+    var chatRef = firebase.database().ref();
     var chat = new Firechat(chatRef);
+
     chat.setUser(chatUser.uid, chatUser.displayName);
     chat.getRoomList(function(roomList) {
-        // console.log(roomList);
+
+        var valid = /^[0-9a-zA-Z ]+$/;
+
         var rooms = [];
-        for( var id in roomList) {
-            for (var i=0; i < courses.length; i++) {
-                // alert(course);
-                if(roomList[id].name === courses[i]) {
-                    rooms.push(roomList[id]);
-                    chat.enterRoom(id);
+        for( var cid in courses) {
+            rooms.push(cid);
+            for (var rid in roomList) {
+                if (roomList[rid].name === courses[cid].name) {
+                    rooms.pop();
+                    chat.enterRoom(rid);
                 }
             }
         }
-        if( rooms.length == 0 ) {
-            for(var i=0; i < courses.length; i++) {
-                // alert(course);
-                chat.createRoom(courses[i], "public", function(roomId) {
-                    chat.enterRoom(roomId);
-                });
+        if( rooms.length > 0 ) {
+            for(var i = 0; i < rooms.length; i++) {
+                if( valid.test(courses[rooms[i]].name) ) {
+                    alert(courses[rooms[i]].name + " create");
+                    chat.createRoom(courses[rooms[i]].name, "public", function (roomId) {
+                        chat.enterRoom(roomId);
+                    });
+                }
             }
         }
     });
 
-    // chat.createRoom(courseName, "public", function(roomId){
-    //     chat.enterRoom(roomId);
-    //     console.log("OK"+roomId);
-    // });
-
-
 
 }
 
+/////// code not use /////////////////////
+
+// $('#displayName').style.display = "none";
+// $('#logoutBtn').style.display = "none";
+// $('#loginBtn').style.display = "block";
+
+// chat.createRoom(courseName, "public", function(roomId){
+//     chat.enterRoom(roomId);
+//     console.log("OK"+roomId);
+// });
 
 // Listen for authentication state changes
 // firebase.auth().onAuthStateChanged(function (user) {
@@ -117,7 +135,6 @@ function initChatUI(chatUser) {
 //         // If the user is not logged in,
 //     }
 // });
-
 // function logout() {
 //     firebase.auth().signOut().then(function() {
 //         //sign-out successful
