@@ -1,5 +1,6 @@
 var exports = module.exports = {}
 var firebase = require('firebase')
+var cloudinary = require('cloudinary')
 
 
 module.exports = {
@@ -76,23 +77,27 @@ exports.getCourses = (req, res) => {
 }
 
 exports.uploadProfileImage = (req, res) => {
-    if (!req.files)
-        return res.status(400).send('No photo was uploaded.');
-
     var user = req.session.user;
+
     var userRef = firebase.app().database().ref('users').child(user.id);
 
-    let profilePhoto = req.files.profilePhoto;
+    var promise = new Promise((resolve, reject) => {
+        cloudinary.uploader.upload_stream((result) => {
+            resolve(result);
+        }).end(req.files.photo.data)
 
-    userRef.once("value", (snapshot) => {
+
+    }).then((result) => {
+
         userRef.update({
-            userPhoto: profilePhoto.data
-        });
-    })
+            photoUrl: result.secure_url
+        })
+        req.session.user['photoUrl'] = result.secure_url;
 
-        .catch((err) => {
-            res.send(404).json({
-                message: err
-            });
+        console.log(req.session.user);
+    })
+        .catch((error) => {
+            console.log(error);
         });
+
 }
