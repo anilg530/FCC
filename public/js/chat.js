@@ -9,15 +9,6 @@ var config = {
 };
 firebase.initializeApp(config);
 
-function updateProfileLink(b) {
-    profileURL = b;
-    // alert("in a funtion" + b);
-}
-
-firebase.database().ref('profile-link/').on('value', function(snapshot) {
-    updateProfileLink(snapshot.val());
-});
-
 function $(id) {
     return document.querySelector(id);
 }
@@ -41,18 +32,24 @@ function init() {
                 // alert(postlink.link);
             firebase.database().ref('profile-link/' + user.uid).set(profilelink);
 
-            loginChat(currentUser);
+            initChatUI(currentUser);
 
         }).catch(function(err) {
             if(err.code === "auth/email-already-in-use")
-                loginChat(currentUser);
+                initChatUI(currentUser);
             else
                 alert("firechat problem, " + err.code + ": " + err.message);
         });
     }
 }
 
-function loginChat(user) {
+
+function updateProfileLink(b) {
+    profileURL = b;
+    // alert("in a funtion" + b);
+}
+
+function initChatUI(user) {
 
     var email = user.email;
     var password = user.id;
@@ -65,71 +62,70 @@ function loginChat(user) {
             displayName: displayName,
             link: user.id
         }
+        // initChatUI(chatUser);
 
-        firebase.database().ref('profile-link/' + u.uid).set(chatUser);
+        // Get a reference to the Firebase Realtime Database
+        var chatRef = firebase.database().ref();
 
-        initChatUI(chatUser);
+        // Create an instance of Firechat
+        var chatUI = new FirechatUI(chatRef, document.getElementById("firechat-wrapper"));
+
+        // // If the user is logged in, set them as the Firechat user
+        chatUI.setUser(chatUser.uid, chatUser.displayName);
+
+        firebase.database().ref('profile-link/').on('value', function(snapshot) {
+            updateProfileLink(snapshot.val());
+        });
+
+        // Get a reference to the Firebase Realtime Database
+        // var chatRef = firebase.database().ref();
+        var chat = new Firechat(chatRef);
+
+        chat.setUser(chatUser.uid, chatUser.displayName);
+        chat.getRoomList(function(roomList) {
+
+            var valid = /^[0-9a-zA-Z ]+$/;
+
+            var rooms = [];
+            for( var cid in courses) {
+                rooms.push(cid);
+                for (var rid in roomList) {
+                    if (roomList[rid].name === courses[cid].name) {
+                        rooms.pop();
+                        chat.enterRoom(rid);
+                    }
+                }
+            }
+            if( rooms.length > 0 ) {
+                var names = "";
+                for(var i = 0; i < rooms.length; i++) {
+                    if( valid.test(courses[rooms[i]].name) ) {
+                        names = names + "\n " + courses[rooms[i]].name;
+                        chat.createRoom(courses[rooms[i]].name, "public"); //, function (roomId) {
+                        // chat.enterRoom(roomId);
+                        // alert("entering room : " + courses[rooms[i]].name);
+                        // });
+                    }
+                }
+            }
+        });
+        // sleep(2000);
+        $('#displayName').textContent = "Hi, " + chatUser.displayName;
+        $('#displayName').style.display = "block";
+        $('#displayName').style.backgroundColor = "#007e37";
+
     }).catch(function(err) {
         //Handle error here
-        alert(err.code + ": " + err.message);
+        alert("firechat problem, " + err.code + ": " + err.message);
     });
 }
 
-
-function initChatUI(chatUser) {
-
-    // Get a reference to the Firebase Realtime Database
-    var chatRef = firebase.database().ref();
-
-    // Create an instance of Firechat
-    var chatUI = new FirechatUI(chatRef, document.getElementById("firechat-wrapper"));
-
-    // // If the user is logged in, set them as the Firechat user
-    chatUI.setUser(chatUser.uid, chatUser.displayName);
-
-    enterChat(chatUser);
-
-}
-
-
-function enterChat(chatUser) {
-
-    // Get a reference to the Firebase Realtime Database
-    var chatRef = firebase.database().ref();
-    var chat = new Firechat(chatRef);
-
-    chat.setUser(chatUser.uid, chatUser.displayName);
-    chat.getRoomList(function(roomList) {
-
-        var valid = /^[0-9a-zA-Z ]+$/;
-
-        var rooms = [];
-        for( var cid in courses) {
-            rooms.push(cid);
-            for (var rid in roomList) {
-                if (roomList[rid].name === courses[cid].name) {
-                    rooms.pop();
-                    chat.enterRoom(rid);
-                }
-            }
-        }
-        if( rooms.length > 0 ) {
-            for(var i = 0; i < rooms.length; i++) {
-                if( valid.test(courses[rooms[i]].name) ) {
-                   // alert(courses[rooms[i]].name + " create");
-                    chat.createRoom(courses[rooms[i]].name, "public"); //, function (roomId) {
-                        // chat.enterRoom(roomId);
-                    // });
-                }
-            }
-            this.location.href=this.location.href;
-        }
-    });
-
-    $('#displayName').textContent = "Hi, " + chatUser.displayName;
-    $('#displayName').style.display = "block";
-    $('#displayName').style.backgroundColor = "#007e37";
-
+function sleep(ms) {
+    // return new Promise(resolve => setTimeout(resolve, ms));
+    var date = new Date();
+    var curDate = null;
+    do { curDate = new Date(); }
+    while(curDate-date < ms);
 }
 
 /////// code not use /////////////////////
