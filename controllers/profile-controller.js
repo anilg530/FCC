@@ -36,6 +36,7 @@ module.exports = {
         req.session.user['bio'] = req.body['bio'] //saves the bio in the user session
         
         userRef.once("value", (snapshot) => {
+            console.log("i added bio")
             userRef.update({
                 biography: req.body['bio']
             }).then(
