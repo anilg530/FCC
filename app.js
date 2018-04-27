@@ -7,7 +7,7 @@ var bodyParser = require('body-parser');
 var firebase = require('firebase');
 var session = require('express-session')
 const fileUpload = require('express-fileupload');
-
+var cloudinary = require('cloudinary');
 
 
 var index = require('./routes/index');
@@ -38,6 +38,13 @@ firebase.auth().onAuthStateChanged(function(user){
     console.log('not logged in')
   }
 })
+
+cloudinary.config({
+    cloud_name: 'dbq9jhgoi',
+    api_key: '582619634618989',
+    api_secret: 'qoYzUbBo4geKi12lOtmP9d1IpVA'
+});
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -46,7 +53,7 @@ app.set('view engine', 'ejs');
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(fileUpload());
