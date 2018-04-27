@@ -3,25 +3,27 @@
 <head>
     <title>FCC</title>
     <meta charset="utf-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
-    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
-
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <link href="stylesheets/custom2.css" rel="stylesheet">
 
 </head>
 <body>
 
-<%- include partials/nav3.ejs%>
+<%- include partials/nav3.ejs %>
 <!------ Include the above in your HEAD tag ---------->
 
 <div class="container profile">
     <div class="span3 well">
         <center>
-            <a data-toggle="modal" data-target="#myModal"><img src="https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcRbezqZpEuwGSvitKy3wrwnth5kysKdRqBW54cAszm_wiutku3R" name="aboutme" width="140" height="140" class="img-circle"></a>
-            <h3><%= user.firstName%>  <%= user.lastName %></h3>
+            <a data-toggle="modal" data-target="#myModal"><img
+                        src="https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcRbezqZpEuwGSvitKy3wrwnth5kysKdRqBW54cAszm_wiutku3R"
+                        name="aboutme" width="140" height="140" class="img-circle"></a>
+            <h3><%= user.firstName %>  <%= user.lastName %></h3>
+
             <Button> Upload Image</Button>
         </center>
 
@@ -32,10 +34,39 @@
 
             <h3>About Me</h3>
 
+            <p> <%= user.biography %></p>
         </center>
-        <p> "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-                <Button> Edit Bio</Button>
-        </p>
+
+
+        <button type="button" class="btn btn-info btn-md" data-toggle="modal" data-target="#myModal">Add a Bio</button>
+
+        <!-- Modal -->
+
+        <div class="modal" id="myModal" role="dialog">
+            <div class="modal-dialog">
+                <form method="post" action="/submit_bio">
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Tell the world about yourself. </h4>
+                        </div>
+                        <div class="modal-body">
+                            <input type="textarea" name = "bio"/>
+                        </div>
+
+
+
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-default pull-left">Add Bio</button>
+                            <button  class="btn btn-default pull-right" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+
     </div>
 
     <div class="span well">
@@ -59,4 +90,3 @@
 </body>
 
 </html>
-
