@@ -35,17 +35,19 @@ module.exports = {
         var userRef = firebase.app().database().ref('users').child(user['id']);
 
 
-        req.session.user['bio'] = req.body['bio'] //saves the bio in the user session
+        req.session.user['biography'] = req.body['biography'] //saves the bio in the user session
 
+            console.log('From the backend:')
+            console.log(req.session.user);
         userRef.once("value", (snapshot) => {
             userRef.update({
-                biography: req.body['bio']
-            }).then(
-                value => {
-                    res.redirect('/my_profile')
-                }
-            )
-        });
+                biography: req.body['biography']
+            })
+        }).then(
+            value => {
+                res.redirect('/my_profile')
+            }
+        )
     },
 
     uploadProfileImage: (req, res) => {
@@ -53,25 +55,27 @@ module.exports = {
 
         var userRef = firebase.app().database().ref('users').child(user.id);
 
-        var promise = new Promise((resolve, reject) => {
-            cloudinary.uploader.upload_stream((result) => {
-                resolve(result);
-            }).end(req.files.photo.data)
+
+            var promise = new Promise((resolve, reject) => {
+                cloudinary.uploader.upload_stream((result) => {
+                    resolve(result);
+                }).end(req.files.photo.data)
 
 
-        }).then((result) => {
+            }).then((result) => {
 
-            userRef.update({
-                photoUrl: result.secure_url
+                userRef.update({
+                    photoUrl: result.secure_url
+                })
+                req.session.user['photoUrl'] = result.secure_url;
+                resolve(req.session.user);
+
+                console.log(req.session.user);
             })
-            req.session.user['photoUrl'] = result.secure_url;
-
-            console.log(req.session.user);
-        })
-            .catch((error) => {
-                console.log(error);
-            });
-
+                .catch((error) => {
+                    console.log(error);
+                });
+            return(promise);
     }
 
 }

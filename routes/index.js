@@ -133,7 +133,8 @@ router.get('/profile/:id', function(req,res,next){
     
 })
 router.get('/my_profile', function(req,res,next){
-    console.log("courses session: " + req.session.courses)
+    console.log('from backEnd')
+    console.log(req.session.user);
     res.render("my_profile",{ user: req.session.user })
 })
 
@@ -148,7 +149,9 @@ router.get('/userPhotoForm', (req,res) => {
 })
 
 router.post('/userPhoto', (req, res) => {
-    profileController.uploadProfileImage(req, res);
+    profileController.uploadProfileImage(req, res).then(()=>{
+        res.redirect('/my_profile')
+    })
 
 })
 
