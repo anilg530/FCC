@@ -25,7 +25,7 @@ module.exports = {
             }
         }).then(
             profile => {
-
+                console.log("profile Info: ", profileInfo)
                 res.render("profile", {profile: profileInfo, profileCourses: profileCourses})
             }
         )
