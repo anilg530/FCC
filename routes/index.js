@@ -149,6 +149,7 @@ router.get('/userPhotoForm', (req,res) => {
 
 router.post('/userPhoto', (req, res) => {
     profileController.uploadProfileImage(req, res);
+
 })
 
 router.get('/getCourses', (req, res) => {
