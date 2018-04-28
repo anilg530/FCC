@@ -11,20 +11,19 @@ firebase.initializeApp(config);
 
 function init() {
     //var currentUser = <%= JSON.stringify(user) %>;
-    /*
-        Change the default loader style. Available loader names:
 
-        line-pulse
-        jump-pulse
-        circle-turn
-        circle-turn-scale
-        circle-fade
-        square-flip
-        line-scale
-     */
      $.showLoading({
          name: "circle-fade"
-     });
+     });//     Change the default loader style. Available loader names:
+        //
+        //     line-pulse
+        //     jump-pulse
+        //     circle-turn
+        //     circle-turn-scale
+        //     circle-fade
+        //     square-flip
+        //     line-scale
+
     if(currentUser.id != null) {
 
         var email = currentUser.email;
