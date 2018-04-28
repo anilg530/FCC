@@ -1,3 +1,8 @@
+/*
+ * https://cdn.firebase.com/libs/firechat/3.0.1/firechat.min.js
+ * v3.0.1
+ * modified for FCC
+ */
 (function() {
     var a = this,
         b = a._,
@@ -657,7 +662,7 @@
     var __t, __p = "",
         __e = _.escape,
         __j = Array.prototype.join;
-    with(obj) __p += "<div class='message message-" + __e(type) + " ", isSelfMessage && (__p += " message-self "), __p += "' data-message-id='" + __e(id) + "' data-user-id='" + __e(userId) + "' data-user-name='" + __e(name) + "' data-class=\"firechat-message\">\n<div class='clearfix'>\n<label class='fourfifth'>\n<a class='name' title='" + __e(name) + "'><a href='/profile/" + profileURL[__e(userId)].link + "'>" + __e(name) + "</a></strong>\n<em>(" + __e(localtime) + ")</em>:\n</label>", disableActions || (__p += "\n<label class='fifth alignright'>\n<a href='#!' data-event='firechat-user-chat' class='icon user-chat' title='Invite to Private Chat'>&nbsp;</a>\n<a href='#!' data-event='firechat-user-mute-toggle' class='icon user-mute' title='Mute User'>&nbsp;</a>\n</label>\n"), __p += "</div>\n<div class='clearfix message-content'>\n" + (null == (__t = message) ? "" : __t) + "\n</div>\n</div>";
+    with(obj) __p += "<div class='message message-" + __e(type) + " ", isSelfMessage && (__p += " message-self "), __p += "' data-message-id='" + __e(id) + "' data-user-id='" + __e(userId) + "' data-user-name='" + __e(name) + "' data-class=\"firechat-message\">\n<table width=\"100%\"><tr><td width=\"35\" class=\"center\"><a href='/profile/" + profileURL[__e(userId)].link + "' title='" + __e(name) + "'><img width=\"30\" height=\"30\" src='" + profileURL[__e(userId)].photoUrl + "'></a></td><td><div class='clearfix'>\n<label class='fourfifth'>\n<strong class='name' title='" + __e(name) + "'><a href='/profile/" + profileURL[__e(userId)].link + "'>" + __e(name) + "</a></strong>\n<em>(" + __e(localtime) + ")</em>:\n</label>", disableActions || (__p += "\n<label class='fifth alignright'>\n<a href='#!' data-event='firechat-user-chat' class='icon user-chat' title='Invite to Private Chat'>&nbsp;</a>\n<a href='#!' data-event='firechat-user-mute-toggle' class='icon user-mute' title='Mute User'>&nbsp;</a>\n</label>\n"), __p += "</div>\n<div class='clearfix message-content'>\n" + (null == (__t = message) ? "" : __t) + "\n</div></td></tr></table>\n</div>";
     return __p
 }, this.FirechatDefaultTemplates["templates/prompt-alert.html"] = function(obj) {
     obj || (obj = {});

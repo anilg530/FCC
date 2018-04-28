@@ -9,14 +9,20 @@ var config = {
 };
 firebase.initializeApp(config);
 
-function $(id) {
-    return document.querySelector(id);
-}
-
 function init() {
     //var currentUser = <%= JSON.stringify(user) %>;
-    $('#displayName').textContent = "Entering ...";
-    $('#displayName').style.backgroundColor = "#ab9800"
+
+     $.showLoading({
+         name: "circle-fade"
+     });//     Change the default loader style. Available loader names:
+        //
+        //     line-pulse
+        //     jump-pulse
+        //     circle-turn
+        //     circle-turn-scale
+        //     circle-fade
+        //     square-flip
+        //     line-scale
 
     if(currentUser.id != null) {
 
@@ -27,9 +33,10 @@ function init() {
                 profilelink = {
                     email: currentUser.email,
                     name: currentUser.firstName + ' ' + currentUser.lastName,
-                    link: currentUser.id
+                    link: currentUser.id,
+                    photoUrl: currentUser.photoUrl
                 };
-                // alert(postlink.link);
+
             firebase.database().ref('profile-link/' + user.uid).set(profilelink);
 
             initChatUI(currentUser);
@@ -60,7 +67,8 @@ function initChatUI(user) {
             uid: u.uid,
             email: email,
             displayName: displayName,
-            link: user.id
+            link: user.id,
+            photoUrl: user.photoUrl
         }
         // initChatUI(chatUser);
 
@@ -110,9 +118,10 @@ function initChatUI(user) {
             }
         });
         // sleep(2000);
-        $('#displayName').textContent = "Hi, " + chatUser.displayName;
-        $('#displayName').style.display = "block";
-        $('#displayName').style.backgroundColor = "#007e37";
+        // $('#displayName').textContent = "Hi, " + chatUser.displayName;
+        // $('#displayName').style.display = "block";
+        // $('#displayName').style.backgroundColor = "#007e37";
+        $.hideLoading();
 
     }).catch(function(err) {
         //Handle error here
@@ -128,7 +137,15 @@ function sleep(ms) {
     while(curDate-date < ms);
 }
 
+/*
 /////// code not use /////////////////////
+
+// function $(id) {
+// return document.querySelector(id);
+// }
+
+// $('#displayName').textContent = "Entering ...";
+// $('#displayName').style.backgroundColor = "#ab9800"
 
 // $('#displayName').style.display = "none";
 // $('#logoutBtn').style.display = "none";
@@ -175,3 +192,4 @@ function sleep(ms) {
 //         console.log("Error authenticating user:", error);
 //     });
 // }
+*/
