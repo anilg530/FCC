@@ -1,4 +1,10 @@
 @charset "UTF-8";
+/*!
+https://cdn.firebase.com/libs/firechat/3.0.1/firechat.min.css
+v3.0.1
+
+modified for FCC
+*/
 #firechat div, #firechat span, #firechat applet, #firechat object, #firechat iframe, #firechat h1, #firechat h2, #firechat h3, #firechat h4, #firechat h5, #firechat h6, #firechat p, #firechat blockquote, #firechat pre, #firechat a, #firechat abbr, #firechat acronym, #firechat address, #firechat big, #firechat cite, #firechat code, #firechat del, #firechat dfn, #firechat em, #firechat img, #firechat ins, #firechat kbd, #firechat q, #firechat s, #firechat samp, #firechat small, #firechat strike, #firechat strong, #firechat sub, #firechat sup, #firechat tt, #firechat var, #firechat b, #firechat u, #firechat i, #firechat center, #firechat dl, #firechat dt, #firechat dd, #firechat ol, #firechat ul, #firechat li, #firechat fieldset, #firechat form, #firechat label, #firechat legend, #firechat table, #firechat caption, #firechat tbody, #firechat tfoot, #firechat thead, #firechat tr, #firechat th, #firechat td, #firechat article, #firechat aside, #firechat canvas, #firechat details, #firechat embed, #firechat figure, #firechat figcaption, #firechat footer, #firechat header, #firechat hgroup, #firechat menu, #firechat nav, #firechat output, #firechat ruby, #firechat section, #firechat summary, #firechat time, #firechat mark, #firechat audio, #firechat video {
     border: 0;
     font-size: 12px;

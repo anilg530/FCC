@@ -1,3 +1,8 @@
+/*
+ * https://cdn.firebase.com/libs/firechat/3.0.1/firechat.min.js
+ * v3.0.1
+ * modified for FCC
+ */
 (function() {
     var a = this,
         b = a._,
