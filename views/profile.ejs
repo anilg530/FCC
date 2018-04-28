@@ -9,7 +9,7 @@
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
     <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
     <link href="stylesheets/custom2.css" rel="stylesheet">
-   
+
 
     <style>
     /* USER PROFILE PAGE */
@@ -22,15 +22,15 @@
         border-color: #0b0b0b;
         border-width: 10px;
     }
-    
-    
-    
+
+
+
     body{
         background: #87aac7;
         background-image: url("https://preview.ibb.co/it0LMn/ZenBG_1.png"), url("https://image.ibb.co/bYUanS/ZenBG_2.png");
         background-repeat: repeat-y, repeat;
     }
-    
+
     .card {
         margin-top: 20px;
         padding: 30px;
@@ -257,7 +257,7 @@
             <h3>About Me</h3>
             <p><%= profile.biography %></p>
         </center>
-        
+
     </div>
 
     <div class="span well">
@@ -265,7 +265,7 @@
 
             <h3>Mutual Courses</h3>
             <!-- <%= profileCourses %> -->
-            
+
             <% for (var i = 0; i < profileCourses.length; i++) { %>
                 <button type="button" style = "width: 400px; display: block"><a>
                     <h3><%= profileCourses[i]['name'] %></h3>
@@ -273,7 +273,7 @@
                     <p><%= profileCourses[i]['startTime'] %></p>
                     <p><%= profileCourses[i]['endTime'] %></p>
                 </a></button>
-                
+
             <% } %>
         </center>
     </div>

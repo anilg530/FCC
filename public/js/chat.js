@@ -9,15 +9,22 @@ var config = {
 };
 firebase.initializeApp(config);
 
-function $(id) {
-    return document.querySelector(id);
-}
-
 function init() {
     //var currentUser = <%= JSON.stringify(user) %>;
-    $('#displayName').textContent = "Entering ...";
-    $('#displayName').style.backgroundColor = "#ab9800"
+    /*
+        Change the default loader style. Available loader names:
 
+        line-pulse
+        jump-pulse
+        circle-turn
+        circle-turn-scale
+        circle-fade
+        square-flip
+        line-scale
+     */
+     $.showLoading({
+         name: "circle-fade"
+     });
     if(currentUser.id != null) {
 
         var email = currentUser.email;
@@ -112,9 +119,10 @@ function initChatUI(user) {
             }
         });
         // sleep(2000);
-        $('#displayName').textContent = "Hi, " + chatUser.displayName;
-        $('#displayName').style.display = "block";
-        $('#displayName').style.backgroundColor = "#007e37";
+        // $('#displayName').textContent = "Hi, " + chatUser.displayName;
+        // $('#displayName').style.display = "block";
+        // $('#displayName').style.backgroundColor = "#007e37";
+        $.hideLoading();
 
     }).catch(function(err) {
         //Handle error here
@@ -130,7 +138,15 @@ function sleep(ms) {
     while(curDate-date < ms);
 }
 
+/*
 /////// code not use /////////////////////
+
+// function $(id) {
+// return document.querySelector(id);
+// }
+
+// $('#displayName').textContent = "Entering ...";
+// $('#displayName').style.backgroundColor = "#ab9800"
 
 // $('#displayName').style.display = "none";
 // $('#logoutBtn').style.display = "none";
@@ -177,3 +193,4 @@ function sleep(ms) {
 //         console.log("Error authenticating user:", error);
 //     });
 // }
+*/
