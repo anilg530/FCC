@@ -27,9 +27,10 @@ function init() {
                 profilelink = {
                     email: currentUser.email,
                     name: currentUser.firstName + ' ' + currentUser.lastName,
-                    link: currentUser.id
+                    link: currentUser.id,
+                    photoUrl: currentUser.photoUrl
                 };
-                // alert(postlink.link);
+
             firebase.database().ref('profile-link/' + user.uid).set(profilelink);
 
             initChatUI(currentUser);
@@ -60,7 +61,8 @@ function initChatUI(user) {
             uid: u.uid,
             email: email,
             displayName: displayName,
-            link: user.id
+            link: user.id,
+            photoUrl: user.photoUrl
         }
         // initChatUI(chatUser);
 
