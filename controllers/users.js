@@ -11,6 +11,7 @@ module.exports = {
         console.log(email);
         console.log(password);
         console.log(req.body.firstName);
+        req.session['registerError'] = null;
         firebase.auth().createUserWithEmailAndPassword(email, password)
             .then(
                 user => {
@@ -64,6 +65,7 @@ module.exports = {
         var email = req.body.email
         var password = req.body.password
         console.log("logging in")
+        req.session['loginError'] = null;
         firebase.auth().signInWithEmailAndPassword(email, password)
         .then(
             user => {
