@@ -4,7 +4,7 @@ var courses = require('../controllers/courses.js')
 var users = require('../controllers/users.js')
 var visionController = require('../controllers/vision-controller');
 var profileController = require('../controllers/profile-controller');
-
+var pollController = require('../controllers/polls-controller.js')
 /* GET home page. */
 router.get('/', function(req, res, next) {
 
@@ -188,5 +188,21 @@ router.get('/chats', function(req,res,next){
     }
 
 })
+
+router.get('/poll_form', function(req,res,next){
+    res.render('poll_form')
+})
+
+router.post('/poll_submit', function(req,res,next){
+    console.log(req.body)
+    pollController.createPoll(req,res, next)
+    
+})
+
+router.get('/answer_form', function(req,res,next){
+    pollController.getPoll(req,res,next)
+})
+
+router.get('/poll_answer_submit')
 
 module.exports = router;
