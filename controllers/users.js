@@ -1,6 +1,7 @@
 var firebase = require('firebase');
 var visionController  = require('../controllers/vision-controller');
 var coursesController = require('../controllers/courses.js')
+const noImageUrl = 'https://res.cloudinary.com/dbq9jhgoi/image/upload/v1524989020/no-image.png'
 
 module.exports = {
     createUser: function(req,res,next) {
@@ -16,7 +17,8 @@ module.exports = {
                       newUser = {
                         email: req.body.email,
                         firstName: req.body.firstName,
-                        lastName: req.body.lastName
+                        lastName: req.body.lastName,
+                        photoUrl: noImageUrl
 
                     }
 
