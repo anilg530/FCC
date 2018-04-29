@@ -60,6 +60,7 @@ router.post('/save_schedule', function(req,res,next){
         inputCourses.push(currentCourse)
     }
     console.log(inputCourses)
+
     req.session.courses = inputCourses
     courses.createAllCourses(req).then(() =>{
         courses.getAllCourses(req,res,next).then(value =>{
@@ -93,7 +94,7 @@ router.get('/confirm_schedule', function(req,res,next){
 router.post('/submit_schedule', function(req,res,next){
     console.log("going into submit schedule")
     if (!req.files){
-        return res.status(400).send("No files were uploaded");
+        return res.status(400).send("No files were uploaded")
     } else {
         console.log("working fine")
     }
