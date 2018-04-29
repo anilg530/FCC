@@ -76,15 +76,20 @@ app.use(function(req, res, next) {
   next(err);
 });
 
-// error handler
-app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+//Error handling
+app.use(function(req, res, next) {
+    const err = new Error('Not found');
+    err.status = 404;
+    next(err);
+});
 
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
+app.use(function(err, req, res, next) {
+    res.status(err.status || 500);
+    res.json({
+        error: {
+            message: err.message
+        }
+    });
 });
 
 module.exports = app;
