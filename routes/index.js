@@ -21,7 +21,11 @@ router.get('/login_page', function(req,res,next){
 
 //schedule routes
 router.get('/upload_Schedule', function(req,res,next){
-    res.render('upload_Schedule')
+    if(!req.session.user) {
+        res.redirect('/login_page')
+    } else {
+        res.render('upload_Schedule')
+    }
 })
 
 router.post('/save_schedule', function(req,res,next){
@@ -67,19 +71,23 @@ router.post('/save_schedule', function(req,res,next){
 })
 
 router.get('/confirm_schedule', function(req,res,next){
-    console.log('is it working?')
-    console.log("courses being saved in session: "+req.session.courses)
-    var myCourses = req.session.courses
-    for (var i = 0; i < myCourses.length;i++){
-        var nameEdit = myCourses[i]['name'].split(" ")
-        myCourses[i].name = nameEdit[0]
-        myCourses[i].number = nameEdit[1]
-        myCourses[i].section = nameEdit[2]
-        console.log("going in the for")
-    }
-    console.log(JSON.stringify(req.session.courses))
+    if(!req.session.user) {
+        res.redirect('/login_page')
+    } else {
+        console.log('is it working?')
+        console.log("courses being saved in session: " + req.session.courses)
+        var myCourses = req.session.courses
+        for (var i = 0; i < myCourses.length; i++) {
+            var nameEdit = myCourses[i]['name'].split(" ")
+            myCourses[i].name = nameEdit[0]
+            myCourses[i].number = nameEdit[1]
+            myCourses[i].section = nameEdit[2]
+            console.log("going in the for")
+        }
+        console.log(JSON.stringify(req.session.courses))
 
-    res.render('confirm_schedule',{ courses: myCourses })
+        res.render('confirm_schedule', {courses: myCourses})
+    }
 })
 
 router.post('/submit_schedule', function(req,res,next){
@@ -116,7 +124,11 @@ router.get('/homepage', function(req,res,next){
 })
 
 router.get('/course_page', function(req,res,next){
-    res.render('course_page')
+    if(!req.session.user) {
+        res.redirect('login_page');
+    } else {
+        res.render('course_page')
+    }
 })
 
 
@@ -129,13 +141,21 @@ router.post('/submit_course', function(req,res,next){
 //profile routes
 router.get('/profile/:id', function(req,res,next){
     console.log(req.param("id"))
-    profileController.getProfileInfo(req,res, req.param("id"))
+    if(!req.session.user) {
+        res.redirect('/login_page')
+    } else {
+        profileController.getProfileInfo(req, res, req.param("id"))
+    }
     
 })
 router.get('/my_profile', function(req,res,next){
     console.log('from backEnd')
     console.log(req.session.user);
-    res.render("my_profile",{ user: req.session.user })
+    if(!req.session.user) {
+        res.redirect('/login_page')
+    } else {
+        res.render("my_profile", {user: req.session.user})
+    }
 })
 
 router.post('/submit_bio', function(req, res,next){
@@ -145,7 +165,11 @@ router.post('/submit_bio', function(req, res,next){
 
 
 router.get('/userPhotoForm', (req,res) => {
-    res.render('uploadUserImage');
+    if(!req.session.user) {
+        res.redirect('/login_page')
+    } else {
+        res.render('uploadUserImage');
+    }
 })
 
 router.post('/userPhoto', (req, res) => {
@@ -156,7 +180,11 @@ router.post('/userPhoto', (req, res) => {
 })
 
 router.get('/background', (req, res) => {
-    res.render('background');
+    if(!req.session.user) {
+        res.redirect('/login_page')
+    } else {
+        res.render('background');
+    }
 })
 
 router.post('/backgroundUpload', (req, res) => {
@@ -166,7 +194,11 @@ router.post('/backgroundUpload', (req, res) => {
 })
 
 router.get('/getCourses', (req, res) => {
-    profileController.getCourses(req, res);
+    if(!req.session.user) {
+        res.redirect('/login_page')
+    } else {
+        profileController.getCourses(req, res);
+    }
 })
 
 
@@ -190,7 +222,12 @@ router.get('/chats', function(req,res,next){
 })
 
 router.get('/poll_form', function(req,res,next){
-    res.render('poll_form')
+    if(!req.session.user) {
+        res.redirect('/login_page')
+    } else {
+        res.render('poll_form')
+    }
+
 })
 
 router.post('/poll_submit', function(req,res,next){
@@ -200,7 +237,11 @@ router.post('/poll_submit', function(req,res,next){
 })
 
 router.get('/answer_form', function(req,res,next){
-    pollController.getPoll(req,res,next)
+    if(!req.session.user) {
+        res.redirect('/login_page')
+    } else {
+        pollController.getPoll(req, res, next)
+    }
 })
 
 router.post('/answer_submit', function(req,res,next){
