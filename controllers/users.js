@@ -44,7 +44,6 @@ module.exports = {
                         .catch( 
                             error => {
                                 console.log(error)
-                                res.redirect('/')
                             }
                         )
                 }
@@ -54,6 +53,8 @@ module.exports = {
                     var errorMessage = error.message;
                     console.log(errorCode)
                     console.log(errorMessage)
+                req.session['registerError'] = errorMessage
+                res.redirect('/register')
                 }
             )
     },
@@ -82,13 +83,14 @@ module.exports = {
                 
             }
         )
-        .catch(function(error){
+        .catch(function(error) {
             console.log('is it going here')
             var errorCode = error.computed
             var errorMessage = error.message;
             console.log(errorCode)
             console.log(errorMessage)
-
+            req.session['loginError'] = errorMessage;
+            res.redirect('/login_page')
         })
     },
 
