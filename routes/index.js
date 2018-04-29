@@ -13,8 +13,11 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/login_page', function(req,res,next){
-
-    res.render('loginPage')
+    // if(req.session['loginError']) {
+    //     res.render('loginPage', {error: req.session['loginError']})
+    // }
+    console.log(req.session['loginError'])
+    res.render('loginPage', {error:req.session['loginError']})
 
 })
 
@@ -112,7 +115,8 @@ router.post('/submit_schedule', function(req,res,next){
 
 //register routes
 router.get('/register', function(req,res,next){
-    res.render('signup')
+    res.render('signup', {error: req.session['registerError']})
+
 })
 
 router.get('/homepage', function(req,res,next){
@@ -248,6 +252,15 @@ router.get('/answer_form', function(req,res,next){
 router.post('/answer_submit', function(req,res,next){
     // console.log(req.body)
     pollController.answerPoll(req,res,next)
+})
+
+router.post('/login_user', function(req,res,next){
+    users.logInUser(req,res,next, false)
+})
+
+router.post('/new_user', function(req,res,next){
+    console.log("making new user")
+    users.createUser(req,res,next)
 })
 
 module.exports = router;

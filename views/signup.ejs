@@ -22,7 +22,7 @@
 <!-- MultiStep Form -->
 <div class="row">
     <div class="col-md-6 col-md-offset-3">
-        <form id="msform" action="/users/new_user" method = "post">
+        <form id="msform" action="/new_user" method = "post">
             <!-- progressbar -->
 
 
@@ -30,6 +30,9 @@
 
                 <h2 class="fs-title">Lets Connect</h2>
                 <h3 class="fs-subtitle">Tell us more about you and upload a screenshot of your schedule.</h3>
+                <% if (error) { %>
+                <p style = "color: red">*<%= error %></p>
+                <% } %>
                 <input type="text"  id = "a" name="firstName" placeholder="First Name" required/>
                 <input type="text" id  = "b" name="lastName" placeholder="Last Name" required/>
                 <input type="email" id = "c" name="email" placeholder="Email" required/>
