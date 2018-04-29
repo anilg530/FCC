@@ -85,11 +85,16 @@ app.use(function(req, res, next) {
 
 app.use(function(err, req, res, next) {
     res.status(err.status || 500);
-    res.json({
-        error: {
-            message: err.message
-        }
-    });
+    // res.json({
+    //     error: {
+    //         message: err.message
+    //     }
+    // });
+    var error = ({
+        message: err.message,
+        status: err.status
+    })
+    res.render('error', ({error: error}))
 });
 
 module.exports = app;
