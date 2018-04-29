@@ -155,6 +155,16 @@ router.post('/userPhoto', (req, res) => {
 
 })
 
+router.get('/background', (req, res) => {
+    res.render('background');
+})
+
+router.post('/backgroundUpload', (req, res) => {
+    profileController.uploadBackgoundPic(req, res).then(()=>{
+        res.redirect('/my_profile')
+    });
+})
+
 router.get('/getCourses', (req, res) => {
     profileController.getCourses(req, res);
 })
