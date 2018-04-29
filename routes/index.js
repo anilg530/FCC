@@ -203,6 +203,9 @@ router.get('/answer_form', function(req,res,next){
     pollController.getPoll(req,res,next)
 })
 
-router.get('/poll_answer_submit')
+router.post('/answer_submit', function(req,res,next){
+    // console.log(req.body)
+    pollController.answerPoll(req,res,next)
+})
 
 module.exports = router;

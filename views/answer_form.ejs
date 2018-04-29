@@ -10,6 +10,17 @@
 </head>
 <body>
     <h1>Poll Answer Form</h1>
-    <h2> <%= poll.title %></h2>
+    <h2> Title: <%= poll.title %></h2>
+    <h3> Description: <%= poll.description %></h3>
+    <form action="/answer_submit" method = "post">
+        <% for (var i = 0; i < poll.options.length; i++) { %>
+            <p><%= poll.options[i] %><input name = "answer" type="radio" value = "<%= i %>"></p>
+            
+        <% } %>
+        <button type = "submit">Submit</button>
+    </form>
+    
+
+    
 </body>
 </html>

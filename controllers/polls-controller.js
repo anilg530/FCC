@@ -47,26 +47,51 @@ module.exports = {
         })
     },
     answerPoll: function(req,res,next){
-        var courseId
-        var pollId
+        var courseId = "-LB7g1_MvZgbPzcYl8xi"
+        var pollId = "-LBDxoryKHN0A6NqZ4Us"
+        var formAnswer = req.body.answer
+        console.log(1)
         var pollRef = firebase.database().ref("polls/").child(courseId).child(pollId)
         pollRef.once("value", function(snapshot){
+            console.log(JSON.stringify(snapshot))
             if (snapshot.hasChild("answers")){
                 pollRef.child("answers").transaction(function(answers){
                     if (answers){
-                        answers.push(req.session.user['id'])
+                        if (answers[formAnswer]){
+                            answers[formAnswer].push(req.session.user['id'])
+                        } else {
+                            answers[formAnswer] = []
+                            answers[formAnswer].push(req.session.user['id'])
+                            
+                        }
+                        
                     }
                     return answers
                 })
             } else {
+                console.log(2)
                 pollRef.transaction(function(poll){
+                    console.log(3)
                     if (poll) {
+                        console.log(4)
                         if (!poll.answers){
-                            poll.answers = [req.session.user['id']]
+                            console.log(5)
+                            
+                            poll.answers = []
+                            poll.answers.length = poll.options.length
+                            poll.answers[formAnswer] = []
+                            poll.answers[formAnswer].push(req.session.user['id'])
+                            console.log(JSON.stringify(poll))
+                            
                         } else {
-                            poll.answers.push(req.session.user['id'])
+                            console.log(6)
+                            console.log(JSON.stringify(poll))
+                            answers[formAnswer] = []
+                            answers[formAnswer].push(req.session.user['id'])
                         }
                     }
+
+                    return poll
                 })
             }
         }) 
