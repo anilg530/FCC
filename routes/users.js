@@ -18,17 +18,21 @@ router.post('/login_user', function(req,res,next){
 })
 
 router.get('/sign_out', function(req,res,next){
-  users.signOutUser(req,res,next)
+        users.signOutUser(req, res, next)
 })
 
 
 
 router.get('/get_courses', function(req,res,next){
- courses.getAllCourses(req,res,next)
- .then((courses)=>{
-   console.log("THE COURSES: ",courses);
-   res.redirect('/homepage')
- })
+    if(!req.session.user) {
+        res.redirect('login_page')
+    } else {
+        courses.getAllCourses(req, res, next)
+            .then((courses) => {
+                console.log("THE COURSES: ", courses);
+                res.redirect('/homepage')
+            })
+    }
 })
 
 module.exports = router;
