@@ -13,8 +13,11 @@ var cloudinary = require('cloudinary');
 var index = require('./routes/index');
 var users = require('./routes/users');
 const uploadSchedule = require('./routes/uploadSchedule');
+var cors = require('cors');
 
 var app = express();
+
+app.use((cors()));
 
 //firebase config
 // Initialize Firebase
