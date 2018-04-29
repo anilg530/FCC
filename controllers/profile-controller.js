@@ -68,14 +68,38 @@ module.exports = {
                     photoUrl: result.secure_url
                 })
                 req.session.user['photoUrl'] = result.secure_url;
-                resolve(req.session.user);
-
                 console.log(req.session.user);
             })
                 .catch((error) => {
                     console.log(error);
                 });
             return(promise);
+    },
+
+    uploadBackgoundPic: (req, res) => {
+        var user = req.session.user;
+
+        var userRef = firebase.app().database().ref('users').child(user.id);
+
+
+        var promise = new Promise((resolve, reject) => {
+            cloudinary.uploader.upload_stream((result) => {
+                resolve(result);
+            }).end(req.files.background.data)
+
+
+        }).then((result) => {
+
+            userRef.update({
+                backgroundUrl: result.secure_url
+            })
+            req.session.user['backgroundUrl'] = result.secure_url;
+            console.log(req.session.user);
+        })
+            .catch((error) => {
+                console.log(error);
+            });
+        return(promise);
     }
 
 }
