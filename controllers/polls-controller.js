@@ -43,7 +43,7 @@ module.exports = {
             
         }).then(value =>{
             console.log(JSON.stringify(pollInfo));
-            res.render('answer_form');
+            res.render('answer_form', ({poll: pollInfo}));
         })
     },
     answerPoll: function(req,res,next){
