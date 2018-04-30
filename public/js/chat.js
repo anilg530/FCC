@@ -70,6 +70,9 @@ function initChatUI(user) {
             link: user.id,
             photoUrl: user.photoUrl
         }
+
+        firebase.database().ref('profile-link/' + u.uid).set(chatUser);
+
         // initChatUI(chatUser);
 
         // Get a reference to the Firebase Realtime Database
