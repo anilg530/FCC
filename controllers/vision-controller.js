@@ -14,15 +14,15 @@ exports.detect = (image,req, res) => {
 
 
     var promise = new Promise((resolve, reject) => {
-        var regexName = /[A-Z]{2,4}(?= [0-9])/g
-        var regexNumber = /[0-9]{2,3}[A-Z]*(?=-)/g
+        var regexName = /[A-Z]{2,4}[0-9]?(?= [0-9])/g
+        var regexNumber = /[0-9]{2,3}[A-Z]?(?=-)/g
         var regexSection = /(?<=-)\d{2}/g
         var regexTimes = /[0-9]{1,2}:\d{2}[A-Z]{2}|Room TBA/g
         var regexDays = /([A-Z][a-z]){1,2}(?![a-z])|Room TBA/g
 
         client.textDetection(image).then((results) => {
             const detections = results[0].textAnnotations;
-            // console.log(detections[0])
+            console.log(detections[0])
 
             var departments = detections[0].description.match(regexName)
             var sections = detections[0].description.match(regexSection)
@@ -36,7 +36,12 @@ exports.detect = (image,req, res) => {
             var endIndex = 1
             var timesCount = 0
             var daysCount = 0
+            console.log("departments: ", departments)
+            console.log("sections: ", sections)
+            console.log("number: ", numbers)
             console.log("times: ", times)
+            console.log("days: ", days)
+            
             for (var i = 0; i < numbers.length; i++) {
                 var currentCourse
                 if (times[startIndex] == "Room TBA"){
@@ -54,7 +59,7 @@ exports.detect = (image,req, res) => {
                 
                 courses.push(currentCourse)
             }
-
+            
             console.log('user id: ' + req.session['user']['id'])
             var userId = req.session['user']['id']
             var coursesRef = firebase.database().ref('courses/').child("Spring 2018")
@@ -90,15 +95,3 @@ exports.detect = (image,req, res) => {
 
 
 
-
-// {"-LAQ5hcywSwy4AHHG0bU":{
-//     "days":"We",
-//     "endTime":"8:45PM",
-//     "name":"SE 195B 01",
-//     "startTime":"6:00PM",
-//     "students":[
-//         "lZUXECkltQObiViADDKT4APSYJ63",
-//            "asdfasdflkjasdf"
-//         ]
-//     }   
-// }
