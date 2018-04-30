@@ -9,104 +9,152 @@ var config = {
 };
 firebase.initializeApp(config);
 
-function $(id) {
-    return document.querySelector(id);
-}
-
 function init() {
     //var currentUser = <%= JSON.stringify(user) %>;
-    $('#displayName').textContent = "Loading chat ...";
-    // $('#displayName').style.display = "none";
-    // $('#logoutBtn').style.display = "none";
-    // $('#loginBtn').style.display = "block";
+
+     $.showLoading({
+         name: "circle-fade"
+     });//     Change the default loader style. Available loader names:
+        //
+        //     line-pulse
+        //     jump-pulse
+        //     circle-turn
+        //     circle-turn-scale
+        //     circle-fade
+        //     square-flip
+        //     line-scale
 
     if(currentUser.id != null) {
-        // alert(JSON.stringify(session) );
+
         var email = currentUser.email;
         var password = currentUser.id;
-        firebase.auth().createUserWithEmailAndPassword(email, password).then(function() {
+        firebase.auth().createUserWithEmailAndPassword(email, password).then(function(user) {
             // user for chat created
-            loginChat(currentUser);
+                profilelink = {
+                    email: currentUser.email,
+                    name: currentUser.firstName + ' ' + currentUser.lastName,
+                    link: currentUser.id,
+                    photoUrl: currentUser.photoUrl
+                };
+
+            firebase.database().ref('profile-link/' + user.uid).set(profilelink);
+
+            initChatUI(currentUser);
+
         }).catch(function(err) {
             if(err.code === "auth/email-already-in-use")
-                loginChat(currentUser);
+                initChatUI(currentUser);
             else
-                alert(err.code + ": " + err.message);
+                alert("firechat problem, " + err.code + ": " + err.message);
         });
     }
 }
 
-function loginChat(user) {
+
+function updateProfileLink(b) {
+    profileURL = b;
+    // alert("in a funtion" + b);
+}
+
+function initChatUI(user) {
 
     var email = user.email;
     var password = user.id;
     var displayName = user.firstName + ' ' + user.lastName;     ///not using//  email.split('@')[0].replace(/[^a-zA-Z0-9]/g, ' '); // fix string, replace all symbols w/ space
-    firebase.auth().signInWithEmailAndPassword(email, password).then(function(result) {
+    firebase.auth().signInWithEmailAndPassword(email, password).then(function(u) {
         // signed in
         chatUser = {
-            uid: result.uid,
+            uid: u.uid,
             email: email,
-            displayName: displayName
+            displayName: displayName,
+            link: user.id,
+            photoUrl: user.photoUrl
         }
-        initChatUI(chatUser);
-    }).catch(function(err) {
-        //Handle error here
-        alert(err.code + ": " + err.message);
-    });
-}
+        // initChatUI(chatUser);
 
+        // Get a reference to the Firebase Realtime Database
+        var chatRef = firebase.database().ref();
 
+        // Create an instance of Firechat
+        var chatUI = new FirechatUI(chatRef, document.getElementById("firechat-wrapper"));
 
-function initChatUI(chatUser) {
+        // // If the user is logged in, set them as the Firechat user
+        chatUI.setUser(chatUser.uid, chatUser.displayName);
 
-    $('#displayName').textContent = "Hi, " + chatUser.displayName;
-    $('#displayName').style.display = "block";
-    $('#displayName').style.backgroundColor = "#007e37"
+        firebase.database().ref('profile-link/').on('value', function(snapshot) {
+            updateProfileLink(snapshot.val());
+        });
 
-    // Get a reference to the Firebase Realtime Database
-    var chatRef = firebase.database().ref();
+        // Get a reference to the Firebase Realtime Database
+        // var chatRef = firebase.database().ref();
+        var chat = new Firechat(chatRef);
 
-    // Create an instance of Firechat
-    var chatUI = new FirechatUI(chatRef, document.getElementById("firechat-wrapper"));
+        chat.setUser(chatUser.uid, chatUser.displayName);
+        chat.getRoomList(function(roomList) {
 
-    // // If the user is logged in, set them as the Firechat user
-    chatUI.setUser(chatUser.uid, chatUser.displayName);
+            var valid = /^[0-9a-zA-Z ]+$/;
 
-    //var courseTitle = courses;
-// alert(courses);
-    var chat = new Firechat(chatRef);
-    chat.setUser(chatUser.uid, chatUser.displayName);
-    chat.getRoomList(function(roomList) {
-        // console.log(roomList);
-        var rooms = [];
-        for( var id in roomList) {
-            for (var i=0; i < courses.length; i++) {
-                // alert(course);
-                if(roomList[id].name === courses[i]) {
-                    rooms.push(roomList[id]);
-                    chat.enterRoom(id);
+            var rooms = [];
+            for( var cid in courses) {
+                rooms.push(cid);
+                for (var rid in roomList) {
+                    if (roomList[rid].name === courses[cid].name) {
+                        rooms.pop();
+                        chat.enterRoom(rid);
+                    }
                 }
             }
-        }
-        if( rooms.length == 0 ) {
-            for(var i=0; i < courses.length; i++) {
-                // alert(course);
-                chat.createRoom(courses[i], "public", function(roomId) {
-                    chat.enterRoom(roomId);
-                });
+            if( rooms.length > 0 ) {
+                var names = "";
+                for(var i = 0; i < rooms.length; i++) {
+                    if( valid.test(courses[rooms[i]].name) ) {
+                        names = names + "\n " + courses[rooms[i]].name;
+                        chat.createRoom(courses[rooms[i]].name, "public"); //, function (roomId) {
+                        // chat.enterRoom(roomId);
+                        // alert("entering room : " + courses[rooms[i]].name);
+                        // });
+                    }
+                }
             }
-        }
+        });
+        // sleep(2000);
+        // $('#displayName').textContent = "Hi, " + chatUser.displayName;
+        // $('#displayName').style.display = "block";
+        // $('#displayName').style.backgroundColor = "#007e37";
+        $.hideLoading();
+
+    }).catch(function(err) {
+        //Handle error here
+        alert("firechat problem, " + err.code + ": " + err.message);
     });
-
-    // chat.createRoom(courseName, "public", function(roomId){
-    //     chat.enterRoom(roomId);
-    //     console.log("OK"+roomId);
-    // });
-
-
-
 }
 
+function sleep(ms) {
+    // return new Promise(resolve => setTimeout(resolve, ms));
+    var date = new Date();
+    var curDate = null;
+    do { curDate = new Date(); }
+    while(curDate-date < ms);
+}
+
+/*
+/////// code not use /////////////////////
+
+// function $(id) {
+// return document.querySelector(id);
+// }
+
+// $('#displayName').textContent = "Entering ...";
+// $('#displayName').style.backgroundColor = "#ab9800"
+
+// $('#displayName').style.display = "none";
+// $('#logoutBtn').style.display = "none";
+// $('#loginBtn').style.display = "block";
+
+// chat.createRoom(courseName, "public", function(roomId){
+//     chat.enterRoom(roomId);
+//     console.log("OK"+roomId);
+// });
 
 // Listen for authentication state changes
 // firebase.auth().onAuthStateChanged(function (user) {
@@ -117,7 +165,6 @@ function initChatUI(chatUser) {
 //         // If the user is not logged in,
 //     }
 // });
-
 // function logout() {
 //     firebase.auth().signOut().then(function() {
 //         //sign-out successful
@@ -145,3 +192,4 @@ function initChatUI(chatUser) {
 //         console.log("Error authenticating user:", error);
 //     });
 // }
+*/

@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>FCC</title>
+    <meta charset="utf-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link href="stylesheets/custom2.css" rel="stylesheet">
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+    <style>
+        .profile2 {
+            margin-left: 10%;
+            margin-right: 10%;
+            margin-top: 12%;
+        }
+        .background{
+            background-image: url(<%= user.backgroundUrl %>);
+            background-size: cover;
+        }
+    </style>
+
+
+</head>
+<body>
+
+<%- include partials/nav3.ejs %>
+<!------ Include the above in your HEAD tag ---------->
+
+<div class=" profile2">
+    <div class="card blue-grey lighten-4 ">
+        <div class="card-content">
+            <div class="span3 well background">
+                <center>
+                    <a data-toggle="modal" data-target="#myModal"><img
+                                src="<%= user.photoUrl %>"
+                                width="150" height="150" class="img-circle"></a>
+                    <h3><%= user.firstName %>  <%= user.lastName %></h3>
+
+                    <button type="button"    class="btn btn-info btn-md pull right" data-toggle="modal"
+                            data-target="#myModal2">Upload Image
+                    </button>
+
+                    <!-- Modal -->
+
+
+                    <div class="modal1" id="myModal2" >
+                        <div class="modal1-dialog">
+                            <form ref='uploadForm'
+                                  id='uploadForm'
+                                  action='/userPhoto'
+                                  method='post'
+                                  encType="multipart/form-data">
+
+
+                                <div class="modal1-content">
+                                    <div class="modal1-header">
+
+                                        <button type="button" class="close" data-dismiss="modal"></button>
+                                        <h4 class="modal-title">Upload an image. Please use headshots only. </h4>
+                                    </div>
+                                    <div class="modal1-body" >
+                                        <img id="blah" alt="image" width="100" height="100" />
+
+                                    </div>
+
+
+                                    <div class="modal1-footer">
+                                        <input type="file" name="photo" id="photo" onchange="document.getElementById('blah').src = window.URL.createObjectURL(this.files[0])"/>
+                                        <button class="btn waves-effect waves-light" type="submit">Submit
+
+                                        </button>
+                                    </div>
+
+
+
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+
+                    <button type="button" style="margin-left: 75.5%" class="btn btn-info btn-md" data-toggle="modal"
+                            data-target="#myModal3">Background Image
+                    </button>
+                    <div class="modal1" id="myModal3" >
+                        <div class="modal1-dialog">
+                            <form ref='background'
+                                  id='background'
+                                  action='/backgroundUpload'
+                                  method='post'
+                                  encType="multipart/form-data">
+
+
+                                <div class="modal1-content">
+                                    <div class="modal1-header">
+                                        <button type="button" class="close" data-dismiss="modal"></button>
+                                        <h4 class="modal-title">This will be your profile background image </h4>
+                                    </div>
+                                    <div class="modal1-body" >
+                                        <img id="blah2" alt="image" width="150" height="150" />
+                                    </div>
+
+
+                                    <div class="modal1-footer">
+                                        <input type="file" name="background" id="background"   onchange="document.getElementById('blah2').src = window.URL.createObjectURL(this.files[0])"/>
+
+                                        <button class="btn waves-effect waves-light" type="submit">Submit
+
+                                        </button>
+                                    </div>
+
+
+
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </center>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="card blue-grey lighten-4 profile3">
+        <div class="card-content">
+            <div class="span well">
+                <center>
+
+                    <h3>About Me</h3>
+                    <p > <%= user.biography %> </p>
+
+                </center>
+
+
+
+
+                <!-- Modal -->
+                <button type="button" style="margin-left: 78.5%" class="btn btn-info btn-md" data-toggle="modal"
+                        data-target="#myModal">Add a Bio
+                </button>
+
+                <!-- Modal -->
+
+                <div class="modal1" id="myModal" >
+                    <div class="modal1-dialog">
+                        <form method="post" action="/submit_bio" id = "bio">
+                            <!-- Modal content-->
+                            <div class="modal1-content">
+                                <div class="modal1-header">
+                                    <button type="button" class="close" data-dismiss="modal"></button>
+                                    <h4 class="modal-title">Tell the world about yourself. </h4>
+                                </div>
+                                <div class="modal1-body" >
+                                    <textarea style = "height: 300px" rows="40" cols="5" name="biography" form="bio" placeholder="Enter bio here..."></textarea>
+                                </div>
+
+
+                                <div class="modal1-footer">
+                                    <button type="submit" class="btn btn-default pull-left">Add Bio</button>
+                                    <button class="btn btn-default pull-right" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+
+
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+
+</body>
+
+</html>
+
+<script>
+    $(document).ready(function() {
+        $(".modal").modal();
+    });
+</script>
+
+<script>
+    var loadFile = function(event) {
+        var output = document.getElementById('output');
+        output.src = URL.createObjectURL(event.target.files[0]);
+    };
+</script>

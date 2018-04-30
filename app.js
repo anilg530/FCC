@@ -7,14 +7,17 @@ var bodyParser = require('body-parser');
 var firebase = require('firebase');
 var session = require('express-session')
 const fileUpload = require('express-fileupload');
-
+var cloudinary = require('cloudinary');
 
 
 var index = require('./routes/index');
 var users = require('./routes/users');
 const uploadSchedule = require('./routes/uploadSchedule');
+var cors = require('cors');
 
 var app = express();
+
+app.use((cors()));
 
 //firebase config
 // Initialize Firebase
@@ -38,6 +41,13 @@ firebase.auth().onAuthStateChanged(function(user){
     console.log('not logged in')
   }
 })
+
+cloudinary.config({
+    cloud_name: 'dbq9jhgoi',
+    api_key: '582619634618989',
+    api_secret: 'qoYzUbBo4geKi12lOtmP9d1IpVA'
+});
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -46,7 +56,7 @@ app.set('view engine', 'ejs');
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(fileUpload());
@@ -69,15 +79,25 @@ app.use(function(req, res, next) {
   next(err);
 });
 
-// error handler
-app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+//Error handling
+app.use(function(req, res, next) {
+    const err = new Error('Not found');
+    err.status = 404;
+    next(err);
+});
 
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
+app.use(function(err, req, res, next) {
+    res.status(err.status || 500);
+    // res.json({
+    //     error: {
+    //         message: err.message
+    //     }
+    // });
+    var error = ({
+        message: err.message,
+        status: err.status
+    })
+    res.render('error', ({error: error}))
 });
 
 module.exports = app;

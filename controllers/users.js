@@ -1,6 +1,7 @@
 var firebase = require('firebase');
 var visionController  = require('../controllers/vision-controller');
-
+var coursesController = require('../controllers/courses.js')
+const noImageUrl = 'https://res.cloudinary.com/dbq9jhgoi/image/upload/v1524989020/no-image.png'
 
 module.exports = {
     createUser: function(req,res,next) {
@@ -10,13 +11,15 @@ module.exports = {
         console.log(email);
         console.log(password);
         console.log(req.body.firstName);
+        req.session['registerError'] = null;
         firebase.auth().createUserWithEmailAndPassword(email, password)
             .then(
                 user => {
-                    newUser = {
+                      newUser = {
                         email: req.body.email,
                         firstName: req.body.firstName,
-                        lastName: req.body.lastName
+                        lastName: req.body.lastName,
+                        photoUrl: noImageUrl
 
                     }
 
@@ -27,19 +30,21 @@ module.exports = {
                         .then(
                             data => {
                                 console.log('user created')
-                                if (!req.files)
-                                    return res.status(400).send("No files were uploaded");
+                                //     return res.status(400).send("No files were uploaded");
+                                //
+                                // let sampleFile = req.files.sampleFile;
+                                // visionController.detect(sampleFile.data, req);
+                                // this.logInUser(req,res)
 
-                                let sampleFile = req.files.sampleFile;
-                                visionController.detect(sampleFile.data, req);
-                                this.logInUser(req,res)
+
+                                res.redirect('/upload_Schedule')
+
                             })
 
 
-                        .catch(
+                        .catch( 
                             error => {
                                 console.log(error)
-                                res.redirect('/')
                             }
                         )
                 }
@@ -49,6 +54,8 @@ module.exports = {
                     var errorMessage = error.message;
                     console.log(errorCode)
                     console.log(errorMessage)
+                req.session['registerError'] = errorMessage
+                res.redirect('/register')
                 }
             )
     },
@@ -58,6 +65,7 @@ module.exports = {
         var email = req.body.email
         var password = req.body.password
         console.log("logging in")
+        req.session['loginError'] = null;
         firebase.auth().signInWithEmailAndPassword(email, password)
         .then(
             user => {
@@ -66,19 +74,25 @@ module.exports = {
                     console.log(user.uid)
                     req.session.user['id'] = user.uid
                     console.log(req.session.user)
-                    res.redirect('/profile')
+                    coursesController.getAllCourses(req,res,next).then(value => {
+                        console.log("getting courses successful")
+                        res.redirect('/my_profile')
+                    })
+                    
+                    
                 })
                 
                 
             }
         )
-        .catch(function(error){
+        .catch(function(error) {
             console.log('is it going here')
             var errorCode = error.computed
             var errorMessage = error.message;
             console.log(errorCode)
             console.log(errorMessage)
-
+            req.session['loginError'] = errorMessage;
+            res.redirect('/login_page')
         })
     },
 

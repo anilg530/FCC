@@ -4,52 +4,370 @@
     <title>FCC</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
     <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
     <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
-
     <link href="stylesheets/custom2.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link href="stylesheets/custom2.css" rel="stylesheet">
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
 
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+
+
+    <style>
+        /* USER PROFILE PAGE */
+        .profile1 {
+            margin-left: 15%;
+            margin-right: 10%;
+            margin-top: 12%;
+        }
+
+        .profile {
+            padding-top: 150px;
+            background: #474c50;
+            background-color: inherit;
+            background-repeat: repeat-y, repeat;
+            border-color: #0b0b0b;
+            border-width: 10px;
+        }
+
+        body {
+            background: #87aac7;
+            background-image: url("https://preview.ibb.co/it0LMn/ZenBG_1.png"), url("https://image.ibb.co/bYUanS/ZenBG_2.png");
+            background-repeat: repeat-y, repeat;
+        }
+
+        .card {
+            margin-top: 20px;
+            padding: 30px;
+            background-color: rgba(214, 224, 226, 0.2);
+            -webkit-border-top-left-radius: 5px;
+            -moz-border-top-left-radius: 5px;
+            border-top-left-radius: 5px;
+            -webkit-border-top-right-radius: 5px;
+            -moz-border-top-right-radius: 5px;
+            border-top-right-radius: 5px;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+
+        .card.hovercard {
+            position: relative;
+            padding-top: 0;
+            overflow: hidden;
+            text-align: center;
+            background-color: #fff;
+            background-color: rgba(255, 255, 255, 1);
+        }
+
+        .card.hovercard .card-background {
+            height: 130px;
+        }
+
+        .card-background img {
+            -webkit-filter: blur(25px);
+            -moz-filter: blur(25px);
+            -o-filter: blur(25px);
+            -ms-filter: blur(25px);
+            filter: blur(25px);
+            margin-left: -100px;
+            margin-top: -200px;
+            min-width: 130%;
+        }
+
+        .card.hovercard .useravatar {
+            position: absolute;
+            top: 15px;
+            left: 0;
+            right: 0;
+        }
+
+        .card.hovercard .useravatar img {
+            width: 100px;
+            height: 100px;
+            max-width: 100px;
+            max-height: 100px;
+            -webkit-border-radius: 50%;
+            -moz-border-radius: 50%;
+            border-radius: 50%;
+            border: 5px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .card.hovercard .card-info {
+            position: absolute;
+            bottom: 14px;
+            left: 0;
+            right: 0;
+        }
+
+        .card.hovercard .card-info .card-title {
+            padding: 0 5px;
+            font-size: 20px;
+            line-height: 1;
+            color: #262626;
+            background-color: rgba(255, 255, 255, 0.1);
+            -webkit-border-radius: 4px;
+            -moz-border-radius: 4px;
+            border-radius: 4px;
+        }
+
+        .card.hovercard .card-info {
+            overflow: hidden;
+            font-size: 12px;
+            line-height: 20px;
+            color: #737373;
+            text-overflow: ellipsis;
+        }
+
+        .card.hovercard .bottom {
+            padding: 0 20px;
+            margin-bottom: 17px;
+        }
+
+        .btn-pref .btn {
+            -webkit-border-radius: 0 !important;
+        }
+
+        /*scroll effect*/
+        .navbar-trans {
+            background-color: #3f3f3f;
+            border: none;
+            transition: top 1s ease;
+        }
+
+        .navbar-trans2 {
+            background-color: transparent;
+            border: none;
+            transition: top 1s ease;
+        }
+
+        /*double row*/
+        .navbar-doublerow > .navbar {
+            display: block;
+            padding: 0px auto;
+            margin: 0px auto;
+            min-height: 25px;
+        }
+
+        .navbar-doublerow .nav {
+            padding: 0px auto;
+        }
+
+        .navbar-doublerow .dividline {
+            margin: 5px 100px;
+            padding-top: 1px;
+            background-color: inherit;
+        }
+
+        /*top nav*/
+        .navbar-doublerow .navbar-top ul > li > a {
+            padding: 10px auto;
+            font-size: 12px;
+        }
+
+        /*down nav*/
+        .navbar-doublerow .navbar-down .navbar-brand {
+            padding: 0px auto;
+            float: left;
+            color: #fff;
+            font-size: 32px;
+        }
+
+        .navbar-doublerow .navbar-down ul > li > a {
+            font-size: 16px;
+            color: #fff;
+            transition: border-bottom .2s ease-in, transform .2s ease-in-out;
+        }
+
+        .navbar-doublerow .navbar-down ul > li > a:hover {
+            border-bottom: 1px solid #fff;
+            color: #fff;
+        }
+
+        .navbar-doublerow .navbar-down .dropdown {
+            padding: 5px;
+            color: #000;
+        }
+
+        .navbar-doublerow .navbar-down .dropdown ul > li > a,
+        .navbar-doublerow .navbar-down .dropdown ul > li > a:hover {
+            color: #000;
+            border-bottom: none;
+        }
+
+        .navbar-doublerow.navbar-trans.afterscroll {
+            background-color: #0b0b0b;
+        }
+
+        .navbar-doublerow.navbar-trans.afterscroll {
+            top: -50px;
+            background-color: #0b0b0b;
+        }
+
+        .navbar-doublerow.navbar-trans2.afterscroll {
+
+        }
+
+        .navbar-doublerow.navbar-trans2.afterscroll {
+            top: -50px;
+            background-color: black;
+
+        }
+
+        .flex-container {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .flex-item {
+        }
+
+        /*text*/
+        .text-white, .text-white-hover:hover {
+            color: #fff !important
+        }
+
+        /*fontcolor*/
+        .light-grey {
+            color: #000 !important;
+            background-color: #E6E9ED !important
+        }
+
+        .background2{
+            background-image: url(<%= profile.backgroundUrl %>);
+            background-size: cover;
+        }
+       
+
+
+
+    </style>
 </head>
 <body>
 
-<%- include partials/nav2.ejs%>
-<!------ Include the above in your HEAD tag ---------->
-
-<div class="container profile">
-    <div class="span3 well ">
-        <center>
-            <a data-toggle="modal" data-target="#myModal"><img src="https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcRbezqZpEuwGSvitKy3wrwnth5kysKdRqBW54cAszm_wiutku3R" name="aboutme" width="140" height="140" class="img-circle"></a>
-            <h3><%= user.firstName%>  <%= user.lastName %></h3>
-        </center>
+<nav class="navbar blue-grey darken-3 navbar-default navbar-doublerow navbar-trans navbar-fixed-top">
+    <!-- top nav -->
+    <nav class="navbar blue-grey darken-3 navbar-top hidden-xs">
+        <div class="container">
+            <!-- left nav top -->
+            <ul class="nav  blue-grey darken-3 navbar-nav pull-left">
 
 
+            </ul>
+            <!-- right nav top -->
+            <ul class="nav blue-grey darken-3 navbar-nav pull-right">
+                <li><a href="/">About Us</a></li>
+            </ul>
+        </div>
+        <div class="dividline light-grey"></div>
+    </nav>
+    <!-- down nav -->
+    <nav class="navbar  blue-grey darken-3 navbar-down">
+        <div class="container">
+            <div class="navbar-header">
+                <div class="navbar-brand" href="/profile">First Class Connect</div>
+            </div>
+            <ul class="nav navbar-nav  pull-right">
+                <li><a href="/users/sign_out" class="">Sign Out</a></li>
+            </ul>
+            <ul class="nav navbar-nav pull-right">
+                <li><a href="/chats">Class Chats</a></li>
+
+            </ul>
+            <ul class="nav navbar-nav  pull-right hidden-xs">
+                <li><a href="/my_profile" class="">My Profile</a></li>
+            </ul>
+        </div>
+    </nav>
+</nav>
+
+<div class="container profile1">
+
+
+    <div class="card blue-grey lighten-2 " style= "padding: 0px 0px;">
+        <div class="card-content">
+            <div class="span3 well background2" style="height: 100%;width: 100%">
+                <center>
+
+                    <a data-toggle="modal" data-target="#myModal"><img
+                                src="<%= profile.photoUrl %>"
+                                width="140" height="140" class="img-circle"></a>
+                    <h3><%= profile.firstName %>  <%= profile.lastName %></h3>
+                </center>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="card blue-grey lighten-3 ">
+        <div class="card-content">
+
+            <div class="span well">
+                <center>
+
+                    <h3>About Me</h3>
+                    <p><%= profile.biography %></p>
+                </center>
+
+            </div>
+
+
+        </div>
     </div>
     <!-- Bio -->
-    <div class="span well">
-        <center>
 
-            <h3>About Me</h3>
 
-        </center>
-        <p> "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."</p>
+    <div class="card blue-grey lighten-4 ">
+        <div class="card-content">
+
+            <div class="span well">
+                <center>
+                    <h3>Mutual Courses</h3>
+                    <!-- <%= profileCourses %> -->
+
+                    <% for (var i = 0; i < profileCourses.length; i++) { %>
+                    
+                        <div class="col s12 m6" style = "display: inline-block; width: 49%; vertical-align: top;">
+                            <div class="card small blue-grey darken-1">
+                                <center class="card-content white-text">
+                                    <h4><%= profileCourses[i]['name'] %></h4>
+                                    <h5><%= profileCourses[i]['days'] %></h5>
+                                    <h5><%= profileCourses[i]['startTime'] %></h5>
+                                    <h5><%= profileCourses[i]['endTime'] %></h5>
+                                    <br>
+                                </center>
+                                <div class="card-action">
+                                    <center><a href="/chats">Go to chat</a></center>
+
+                                </div>
+                            </div>
+                        </div>
+                    
+
+                    <% } %>
+
+                </center>
+
+            </div>
+
+
+        </div>
     </div>
 
-    <div class="span well">
-        <center>
-            <button><a href=""></a></button>
-            <h3>Current Courses</h3>
 
-        </center>
-    </div>
-    <div class="span well">
+    <!-- <div class="span well">
         <center>
 
             <h3>Past Courses</h3>
 
         </center>
-    </div>
+    </div> -->
 
 </div>
 
@@ -58,3 +376,21 @@
 
 </html>
 
+<script>
+
+
+    // toggle class scroll
+    $(window).scroll(function () {
+        if ($(this).scrollTop() > 50) {
+            $('.navbar-trans').addClass('afterscroll');
+        } else {
+            $('.navbar-trans').removeClass('afterscroll');
+        }
+
+    });
+
+    // demo only
+    // open link in new tab without ugly target="_blank"
+    $("a[href^='http']").attr("target", "_blank");
+
+</script>
