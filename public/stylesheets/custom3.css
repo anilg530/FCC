@@ -1,4 +1,9 @@
 /*scroll effect*/
+
+.nav1{
+    height: 44px;
+    line-height: 44px;
+}
 .navbar-trans {
     background-color: #3f3f3f;
     border: none;
