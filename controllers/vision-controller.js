@@ -12,7 +12,8 @@ const client = new vision.ImageAnnotatorClient({
 
 exports.detect = (image,req, res) => {
 
-        //[A-Z]*\s[0-9]*-0\d
+
+    var promise = new Promise((resolve, reject) => {
         var regexName = /[A-Z]{2,4}(?= [0-9])/g
         var regexNumber = /[0-9]{2,3}[A-Z]*(?=-)/g
         var regexSection = /(?<=-)\d{2}/g
@@ -52,45 +53,42 @@ exports.detect = (image,req, res) => {
                 daysCount++
                 
                 courses.push(currentCourse)
-                
+
             }
             //console.log("outputted courses: ",courses)
             console.log('user id: ' + req.session['user']['id'])
             var userId = req.session['user']['id']
             var coursesRef = firebase.database().ref('courses/').child("Spring 2018")
+
+            
             req.session.courses = courses
-
-            
-            
-
+            //console.log(req.session.courses)
+            resolve(courses);
         })
-            .then(() => {
-            createCourses(req);
 
-            })
-
-            .catch((err) => {
-                console.log(err);
-            });
+    })
+    console.log('1');
+    return promise;
 
 
-    async function createCourses() {
+}
+
+    async function goToConfirmation() {
         var coursesRef = firebase.database().ref('courses/').child("Spring 2018")
 
-        var promise = new Promise((resovle, reject) => {
-            courseController.createAllCourses(req)
-            setTimeout(() => resovle(), 1000);
+        var promise = new Promise((resolve, reject) => {
+            // courseController.createAllCourses(req)
+            // setTimeout(() => resovle(), 1000);
         })
 
 
         await promise
-
+        
         console.log("goinghome")
-        res.redirect('/homepage');
+
+
 
     }
-
-}
 
 
 
