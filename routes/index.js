@@ -263,4 +263,8 @@ router.post('/new_user', function(req,res,next){
     users.createUser(req,res,next)
 })
 
+router.get('/chats/:chatId', function(req,res,next){
+    console.log(req.param('chatId'))
+    //use the chatId to route to the chat that the user clicked on
+})
 module.exports = router;
