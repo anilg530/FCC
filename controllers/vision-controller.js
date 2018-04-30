@@ -14,8 +14,8 @@ exports.detect = (image,req, res) => {
 
 
     var promise = new Promise((resolve, reject) => {
-        var regexName = /[A-Z]{2,4}(?= [0-9])/g
-        var regexNumber = /[0-9]{2,3}[A-Z]*(?=-)/g
+        var regexName = /[A-Z]{2,4}[0-9]?(?= [0-9])/g
+        var regexNumber = /[0-9]{2,3}[A-Z]?(?=-)/g
         var regexSection = /(?<=-)\d{2}/g
         var regexTimes = /[0-9]{1,2}:\d{2}[A-Z]{2}|Room TBA/g
         var regexDays = /([A-Z][a-z]){1,2}(?![a-z])|Room TBA/g
