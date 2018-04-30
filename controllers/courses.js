@@ -149,11 +149,8 @@ module.exports = {
                                // return courseData
                             }
                         })
+
                     }(courseData)
-                    
-                    
-                    
-                    
                 // console.log("course names: " +req.session.courseNames)  
 
                 })
