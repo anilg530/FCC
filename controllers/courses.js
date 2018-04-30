@@ -117,6 +117,7 @@ module.exports = {
         var promise = new Promise((resolve, reject)=>{
             var userRef = firebase.database().ref('users').child(req.session.user['id'])
             var coursesIds=[]
+
             var courseData=[]
             req.session.courses = []
             console.log("user id in session: "+req.session.user['id'])
@@ -125,7 +126,7 @@ module.exports = {
                 console.log("snapshot check: ",JSON.stringify(snapshot.val()))
             }).then(value =>{
                 
-                console.log("course ids: ", coursesIds)
+                // console.log("course ids: ", coursesIds)
                 coursesIds.forEach(function(id){
                     var courseRef = firebase.database().ref('courses/').child("Spring 2018").child(id)
                     console.log("the id: " + id)
@@ -133,6 +134,7 @@ module.exports = {
                         console.log(id)
                         
                         courseRef.once("value", function(courseSnapshot){
+
                             courseData.push(courseSnapshot.val())
                             var inputCourse = courseSnapshot.val()
                             console.log(inputCourse)
@@ -147,11 +149,8 @@ module.exports = {
                                // return courseData
                             }
                         })
+
                     }(courseData)
-                    
-                    
-                    
-                    
                 // console.log("course names: " +req.session.courseNames)  
 
                 })
@@ -162,6 +161,26 @@ module.exports = {
         // resolve(courseNames);
         return promise;
        // res.redirect('/homepage')
+    },
+
+    //test this later
+    getMutualCourses(req,res,next, visitedId){
+        var visitedRef = firebase.database().ref('users').child(visitedId)
+        var courseIds = []
+        visitedRef.once("value", function(snapshot){
+            courseIds = snapshot.val().courses
+        }).then(value =>{
+            console.log("course ids: ", coursesIds)
+            var visitorCourses = []
+            for (var i = 0; i < courseIds.length; i++){
+                for (var j = 0; j< req.session.courses.length; j++){
+                    if (courseIds[i] == req.session.courses[j]['id']){
+                        visitorCourses.push(req.session.courses[j])
+                    }
+                }
+            }
+            return visitedCourses
+        })
     }
 
 }
