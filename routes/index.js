@@ -69,7 +69,7 @@ router.post('/save_schedule', function(req,res,next){
         courses.getAllCourses(req,res,next).then(value =>{
             res.redirect("/my_profile")
         })
-        
+
     })
 
 })
@@ -151,7 +151,7 @@ router.get('/profile/:id', function(req,res,next){
     } else {
         profileController.getProfileInfo(req, res, req.param("id"))
     }
-    
+
 })
 router.get('/my_profile', function(req,res,next){
     console.log('from backEnd')
@@ -238,7 +238,7 @@ router.get('/poll_form', function(req,res,next){
 router.post('/poll_submit', function(req,res,next){
     console.log(req.body)
     pollController.createPoll(req,res, next)
-    
+
 })
 
 router.get('/answer_form', function(req,res,next){
@@ -266,5 +266,12 @@ router.post('/new_user', function(req,res,next){
 router.get('/chats/:chatId', function(req,res,next){
     console.log(req.param('chatId'))
     //use the chatId to route to the chat that the user clicked on
+    console.log(req.session.user)
+    console.log("Entering course chat : " + req.param('chatId'));
+    if (! ('user' in req.session) ) {
+        res.redirect('/login_page');
+    } else {
+        res.redirect('/chats?chatId=' + req.param('chatId'));
+    }
 })
 module.exports = router;

@@ -125,33 +125,34 @@ module.exports = {
                 coursesIds = snapshot.val().courses
                 console.log("snapshot check: ",JSON.stringify(snapshot.val()))
             }).then(value =>{
-                
+
                 // console.log("course ids: ", coursesIds)
                 coursesIds.forEach(function(id){
                     var courseRef = firebase.database().ref('courses/').child("Spring 2018").child(id)
                     console.log("the id: " + id)
                     !function outer(courseData){
                         console.log(id)
-                        
+
                         courseRef.once("value", function(courseSnapshot){
 
-                            courseData.push(courseSnapshot.val())
+                            // courseData.push(courseSnapshot.val())
                             var inputCourse = courseSnapshot.val()
                             console.log(inputCourse)
                             inputCourse['id'] = id
                             req.session.courses.push(inputCourse)
+                            courseData.push(inputCourse);
                             if (coursesIds.length == courseData.length){
                                 console.log("course data: " +JSON.stringify(courseData))
-                                
-                                
+
+
                                 resolve(courseData);
-                               // return promise;  
+                               // return promise;
                                // return courseData
                             }
                         })
 
                     }(courseData)
-                // console.log("course names: " +req.session.courseNames)  
+                // console.log("course names: " +req.session.courseNames)
 
                 })
 

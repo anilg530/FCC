@@ -9,8 +9,14 @@ var config = {
 };
 firebase.initializeApp(config);
 
+var roomId = ""
 function init() {
     //var currentUser = <%= JSON.stringify(user) %>;
+
+    if(chatId !== "" && chatId !== null )
+        firebase.database().ref('course-link/').child(chatId).once('value',function(s){
+            getRoomId(s.val().roomId);
+        });
 
      $.showLoading({
          name: "circle-fade"
@@ -32,7 +38,7 @@ function init() {
             // user for chat created
                 profilelink = {
                     email: currentUser.email,
-                    name: currentUser.firstName + ' ' + currentUser.lastName,
+                    displayName: currentUser.firstName + ' ' + currentUser.lastName,
                     link: currentUser.id,
                     photoUrl: currentUser.photoUrl
                 };
@@ -50,10 +56,14 @@ function init() {
     }
 }
 
-
 function updateProfileLink(b) {
     profileURL = b;
     // alert("in a funtion" + b);
+}
+
+function getRoomId(key) {
+    roomId = key;
+    // alert("in a function" + key);
 }
 
 function initChatUI(user) {
@@ -68,7 +78,7 @@ function initChatUI(user) {
             email: email,
             displayName: displayName,
             link: user.id,
-            photoUrl: user.photoUrl
+            photoUrl: user.photoUrl || "https://res.cloudinary.com/dbq9jhgoi/image/upload/v1524989020/no-image.png"
         }
 
         firebase.database().ref('profile-link/' + u.uid).set(chatUser);
@@ -93,32 +103,58 @@ function initChatUI(user) {
         var chat = new Firechat(chatRef);
 
         chat.setUser(chatUser.uid, chatUser.displayName);
+
+// alert(roomId);
         chat.getRoomList(function(roomList) {
 
-            var valid = /^[0-9a-zA-Z ]+$/;
+            if(roomId !== "" && roomId !== null )
+            {
+            //     for(var rid in roomList)
+            //         if(rid !== roomId) {
+            //             alert("leaving "+roomList[rid].name);
+            //             chat.leaveRoom(rid);
+            //         }
+            //     alert("entering " + roomList[roomId].name);
+                chat.enterRoom(roomId);
+            }
+            else {
 
-            var rooms = [];
-            for( var cid in courses) {
-                rooms.push(cid);
-                for (var rid in roomList) {
-                    if (roomList[rid].name === courses[cid].name) {
-                        rooms.pop();
-                        chat.enterRoom(rid);
+                var rooms = [];
+                for( var cid in courses) {
+                    rooms.push(cid);
+                    for (var rid in roomList) {
+                        if (roomList[rid].name === "Spring 2018 " + courses[cid].name) {
+                            rooms.pop();
+                            chat.enterRoom(rid);
+                        }
+                    }
+
+                }
+
+                var valid = /^[0-9a-zA-Z ]+$/;
+
+                if( rooms.length > 0 ) {
+                    var courseId = "";
+                    for(var i = 0; i < rooms.length; i++) {
+                        if( valid.test(courses[rooms[i]].name) ) {
+                            courseId = courses[rooms[i]].id;
+                            var createdRoomId = chat.createRoom("Spring 2018 " + courses[rooms[i]].name, "public"); //, function (roomId) {
+                            // alert(roomId);
+                            // alert(courseId);
+                            // });
+                            // alert(createdRoomId)
+                            if (createdRoomId != null)
+                            {
+                                firebase.database().ref('course-link/' + courses[rooms[i]].id).set({
+                                    roomId : createdRoomId
+                                });
+                                createdRoomId = null;
+                            }
+                        }
                     }
                 }
             }
-            if( rooms.length > 0 ) {
-                var names = "";
-                for(var i = 0; i < rooms.length; i++) {
-                    if( valid.test(courses[rooms[i]].name) ) {
-                        names = names + "\n " + courses[rooms[i]].name;
-                        chat.createRoom(courses[rooms[i]].name, "public"); //, function (roomId) {
-                        // chat.enterRoom(roomId);
-                        // alert("entering room : " + courses[rooms[i]].name);
-                        // });
-                    }
-                }
-            }
+
         });
         // sleep(2000);
         // $('#displayName').textContent = "Hi, " + chatUser.displayName;

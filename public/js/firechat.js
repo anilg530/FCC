@@ -888,7 +888,7 @@
         }, a.prototype.resumeSession = function() {
             this._userRef.child("rooms").once("value", function(a) {
                 var b = a.val();
-                for (var c in b) this.enterRoom(b[c].id)
+                for (var c in b) if(roomId === c || roomId === ""  || roomId === null) this.enterRoom(b[c].id)
             }, function() {}, this)
         }, a.prototype.on = function(a, b) {
             this._addEventCallback(a, b)
@@ -905,6 +905,7 @@
             "private" === b && (f.authorizedUsers = {}, f.authorizedUsers[this._userId] = !0), e.set(f, function(a) {
                 a || d.enterRoom(e.key), c && c(e.key)
             })
+            return e.key;
         }, a.prototype.enterRoom = function(a) {
             var b = this;
             b.getRoom(a, function(c) {
