@@ -888,7 +888,7 @@
         }, a.prototype.resumeSession = function() {
             this._userRef.child("rooms").once("value", function(a) {
                 var b = a.val();
-                for (var c in b) if(roomId === c || roomId === ""  || roomId === null) this.enterRoom(b[c].id)
+                for (var c in b) this.enterRoom(b[c].id)
             }, function() {}, this)
         }, a.prototype.on = function(a, b) {
             this._addEventCallback(a, b)

@@ -198,6 +198,18 @@
                 <!--<li><a href="/chats">Class Chats</a></li>-->
 
             <!--</ul>-->
+            <script>
+                var currentId = chatId || courses[0].id;                
+                for (var i = 0; i < courses.length; i++) {
+                    document.writeln("<ul class=\"nav navbar-nav  pull-right\">");
+                    document.writeln("    <li><a href=\"/chats?chatId=" + courses[i].id+ "\" class=\"\">" + ""); 
+                    if(currentId === courses[i].id)
+                        document.write("<u>" + courses[i].name + "</u>");
+                    else
+                        document.write(courses[i].name);
+                    document.writeln("</a></li>\n</ul>");
+                }
+            </script>
             <ul class="nav navbar-nav  pull-right hidden-xs">
                 <li><a href="/my_profile" class="">My Profile</a></li>
             </ul>

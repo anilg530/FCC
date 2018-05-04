@@ -6,20 +6,14 @@ var config = {
     projectId: "fcc-chat-25393",
     storageBucket: "fcc-chat-25393.appspot.com",
     messagingSenderId: "725788913392"
-};
+  };
 firebase.initializeApp(config);
 
-var roomId = ""
 function init() {
     //var currentUser = <%= JSON.stringify(user) %>;
 
-    if(chatId !== "" && chatId !== null )
-        firebase.database().ref('course-link/').child(chatId).once('value',function(s){
-            getRoomId(s.val().roomId);
-        });
-
      $.showLoading({
-         name: "circle-fade"
+         name: "jump-pulse"
      });//     Change the default loader style. Available loader names:
         //
         //     line-pulse
@@ -51,19 +45,29 @@ function init() {
             if(err.code === "auth/email-already-in-use")
                 initChatUI(currentUser);
             else
-                alert("firechat problem, " + err.code + ": " + err.message);
+                alert("firechat problem, " + err.code);// + ": " + err.message);
         });
     }
 }
 
+function defaultRoomArray() {
+    var r = [];
+    r.push("#general");
+    r.push("#ideas");
+    r.push("#random");
+    return r;
+ }
 function updateProfileLink(b) {
     profileURL = b;
     // alert("in a funtion" + b);
 }
 
-function getRoomId(key) {
-    roomId = key;
-    // alert("in a function" + key);
+function getCourseName(key) {
+    for(var i=0; i<courses.length; i++) {
+        if(courses[i].id === key)
+            return "Spring 2018 " + courses[i].name
+    }
+    return null;
 }
 
 function initChatUI(user) {
@@ -76,7 +80,7 @@ function initChatUI(user) {
         chatUser = {
             uid: u.uid,
             email: email,
-            displayName: displayName,
+            displayName: displayName.replace(/[^a-zA-Z0-9]/g, ' '), // fix string, replace all symbols w/ space
             link: user.id,
             photoUrl: user.photoUrl || "https://res.cloudinary.com/dbq9jhgoi/image/upload/v1524989020/no-image.png"
         }
@@ -86,7 +90,11 @@ function initChatUI(user) {
         // initChatUI(chatUser);
 
         // Get a reference to the Firebase Realtime Database
-        var chatRef = firebase.database().ref();
+        var currentId = chatId || courses[0].id;
+        var courseName = getCourseName(currentId)
+        var chatRef = firebase.database().ref(currentId);
+        // alert(courseName);
+        chatRef.child("courseName").set(courseName);
 
         // Create an instance of Firechat
         var chatUI = new FirechatUI(chatRef, document.getElementById("firechat-wrapper"));
@@ -104,57 +112,23 @@ function initChatUI(user) {
 
         chat.setUser(chatUser.uid, chatUser.displayName);
 
-// alert(roomId);
         chat.getRoomList(function(roomList) {
-
-            if(roomId !== "" && roomId !== null )
-            {
-            //     for(var rid in roomList)
-            //         if(rid !== roomId) {
-            //             alert("leaving "+roomList[rid].name);
-            //             chat.leaveRoom(rid);
-            //         }
-            //     alert("entering " + roomList[roomId].name);
-                chat.enterRoom(roomId);
-            }
-            else {
-
-                var rooms = [];
-                for( var cid in courses) {
-                    rooms.push(cid);
-                    for (var rid in roomList) {
-                        if (roomList[rid].name === "Spring 2018 " + courses[cid].name) {
-                            rooms.pop();
-                            chat.enterRoom(rid);
-                        }
-                    }
-
-                }
-
                 var valid = /^[0-9a-zA-Z ]+$/;
+                 // if( valid.match(string) ) true;
 
-                if( rooms.length > 0 ) {
-                    var courseId = "";
-                    for(var i = 0; i < rooms.length; i++) {
-                        if( valid.test(courses[rooms[i]].name) ) {
-                            courseId = courses[rooms[i]].id;
-                            var createdRoomId = chat.createRoom("Spring 2018 " + courses[rooms[i]].name, "public"); //, function (roomId) {
-                            // alert(roomId);
-                            // alert(courseId);
-                            // });
-                            // alert(createdRoomId)
-                            if (createdRoomId != null)
-                            {
-                                firebase.database().ref('course-link/' + courses[rooms[i]].id).set({
-                                    roomId : createdRoomId
-                                });
-                                createdRoomId = null;
-                            }
-                        }
+                 if( roomList === null ) {
+                    var rooms = defaultRoomArray();
+                    for(var i=rooms.length-1; i >= 0; i--) {
+                        chat.createRoom(rooms[i], "public")
                     }
                 }
-            }
-
+                else {
+                    for (var rid in roomList){
+                         chat.enterRoom(rid);
+                        console.log(rid)
+                    }
+                }
+            
         });
         // sleep(2000);
         // $('#displayName').textContent = "Hi, " + chatUser.displayName;
@@ -164,7 +138,7 @@ function initChatUI(user) {
 
     }).catch(function(err) {
         //Handle error here
-        alert("firechat problem, " + err.code + ": " + err.message);
+        alert("firechat problem, " + err.code);// + ": " + err.message);
     });
 }
 
