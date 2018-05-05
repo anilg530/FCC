@@ -199,10 +199,15 @@
 
             <!--</ul>-->
             <script>
-                var currentId = chatId || courses[0].id;                
+
+                if (chatId !== "" && getCourseName(chatId) === null)
+                    this.location.href="/404";      // prevent hijack the address bar, direct to a non source url
+
+                var currentId = chatId || courses[0].id;
+
                 for (var i = 0; i < courses.length; i++) {
                     document.writeln("<ul class=\"nav navbar-nav  pull-right\">");
-                    document.writeln("    <li><a href=\"/chats?chatId=" + courses[i].id+ "\" class=\"\">" + ""); 
+                    document.writeln("    <li><a href=\"/chats/" + courses[i].id+ "\" class=\"\">" + "");
                     if(currentId === courses[i].id)
                         document.write("<u>" + courses[i].name + "</u>");
                     else
